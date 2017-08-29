@@ -1,6 +1,7 @@
 <a href="https://happyshoppinglist.herokuapp.com/">
     <img src="static/images/sl_logo.png" alt="ShoppingList logo" title="ShoppingList" align="right" height="60" />
 </a>
+[![Coverage Status](https://coveralls.io/repos/github/JeanAbayo/ShoppingListDesign/badge.svg?branch=master)](https://coveralls.io/github/JeanAbayo/ShoppingListDesign?branch=master)
 
 ShoppingList
 ======================
