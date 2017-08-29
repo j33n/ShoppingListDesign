@@ -1,5 +1,5 @@
 ![Alt text](https://travis-ci.org/JeanAbayo/ShoppingListDesign.svg?branch=addingflask "TravisCI status")
-[![Coverage Status](https://coveralls.io/repos/github/JeanAbayo/ShoppingListDesign/badge.svg?branch=addingflask)](https://coveralls.io/github/JeanAbayo/ShoppingList?branch=addingflask)
+[![Coverage Status](https://coveralls.io/repos/github/JeanAbayo/ShoppingListDesign/badge.svg?branch=master)](https://coveralls.io/github/JeanAbayo/ShoppingListDesign?branch=master)
 <a href="https://happyshoppinglistdesign.herokuapp.com/">
     <img src="static/images/sl_logo.png" alt="ShoppingList logo" title="ShoppingList" align="right" height="60" />
 </a>
