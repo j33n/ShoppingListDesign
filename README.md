@@ -17,7 +17,7 @@ I am using basic CSS, bootstrap and jQuery for the template
 To get up and running clone the repo and open the '.html' files in the browser
 
 ```
-git clone https://github.com/JeanAbayo/ShoppingList.git
+git clone https://github.com/JeanAbayo/ShoppingListDesign.git
 
 ```
 
