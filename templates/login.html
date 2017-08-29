@@ -1,54 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ShoppingList: Keep track of your shopping</title>
-  <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/css/main.css" rel="stylesheet">
-</head>
-<body>
-  <section class="sl_hero">
-    <nav class="navbar navbar-default sl_header">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="static/images/sl_logo.png" alt="Shopping List Logo"></a>
-        </div>
-        <div class="collapse navbar-collapse sl_collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">          
-            <li>
-              <a href="explore.html">
-                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                Explore
-              </a>
-            </li>          
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="login.html">
-                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-                Login
-              </a>
-            </li>
-            <li>
-              <a href="homepage.html">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                Signup
-              </a>
-            </li>          
-          </ul>
-        </div>
-      </div>
-    </nav> 
-    <div class="container-fluid sl_hero_content">
-    <div class="row">
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
   <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_text">
     <h1>Keep track of your shopping</h1>
     <a href="#" class="btn btn-primary btn-large">Join <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>          
@@ -62,11 +14,11 @@
         <form class="form-horizontal" role="form" action="" method="post">
           <div class="input-group">
             <span class="input-group-addon glyphicon glyphicon-envelope" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Email" type="email" name="email">
+            <input class="form-control" placeholder="Email" type="email" name="email" value="{{request.form.email}}">
           </div>
           <div class="input-group">
             <span class="input-group-addon glyphicon glyphicon-lock" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Password" name="password">
+            <input class="form-control" placeholder="Password" name="password" value="{{ request.form.password }}">
           </div>             
           <div class="form-group last">
             <div class="col-sm-12">
@@ -75,25 +27,9 @@
           </div>                  
         </form>
       </div>
-      <div class="panel-footer">Don't have an account? <a href="homepage.html" class="">Signup here</a>
+      <div class="panel-footer">Don't have an account? <a href="/" class="">Signup here</a>
       </div>
     </div>    
   </div>
 </div>
-  </div>
-</section>
-<section class="sl_footer">
-  <div class="container-fluid">
-    <div class="col-sm-9">&copy 2017 ShoppingList</div>
-    <div class="col-sm-3">Made with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> by <a href="https://jeanabayo.github.io">Jean Abayo</a></div>
-  </div>
-</section>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous">    
-</script>
-<script
-  src="static/bootstrap/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock %} 

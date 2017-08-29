@@ -5,8 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ShoppingList: Keep track of your shopping</title>
-  <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/css/main.css" rel="stylesheet">
+  <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}
+" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
 </head>
 <body>
   <section class="sl_hero">
@@ -19,12 +20,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><img src="static/images/sl_logo.png" alt="Shopping List Logo"></a>
+          <a class="navbar-brand" href="#"><img src="../static/images/sl_logo.png" alt="Shopping List Logo"></a>
         </div>
         <div class="collapse navbar-collapse sl_collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">          
             <li>
-              <a href="explore.html">
+              <a href="/explore">
                 <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                 Explore
               </a>
@@ -32,7 +33,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="homepage.html">
+              <a href="/">
                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                 Logout
               </a>
@@ -79,6 +80,7 @@
   crossorigin="anonymous">    
 </script>
 <script
-  src="static/bootstrap/js/bootstrap.min.js"></script>
+  src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
+</script>
 </body>
 </html>
