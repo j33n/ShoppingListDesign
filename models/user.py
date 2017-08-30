@@ -23,20 +23,8 @@ class User(object):
             'created_on' : self.created_on
         }
 
-    def store_user(self):
+    def save_user(self):
         """Save this user"""
-        Store.store_user(self.user_data)
 
-    # def new_user(self, item_name, description, date=datetime.datetime.utcnow()):
-    #     """method used for creating a  bucket list"""
-    #     item = Item(item_name=item_name,
-    #                 description=description,
-    #                 owner_id=self._id,
-    #                 date=date)
-    #     item.save_to_items()
-
-    
-
-    # def save_to_users(self):
-    #     """this methods saves data to the users list"""
-    #     Data.add_data(self.user_data())
+        Store.store_users(self.user_data)
+        

@@ -2,13 +2,15 @@
 
 class Store(object):
     """ Storage module """
-    users = []
+
+    users = [{'username':'John'}]
     shoppinglists = []
     listitems = []
 
-    @staticmethod
-    def store_users(arg):
+    @classmethod
+    def store_users(cls, user_data):
         """Adding users, lists and items"""
 
-        if 'email' in arg:
-            Store.users.append(arg)
+        if(user_data):
+        	Store.users.append(user_data)
+        	

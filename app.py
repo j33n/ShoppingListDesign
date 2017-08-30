@@ -1,7 +1,6 @@
 # """ module for the routes and views """
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
-import json
 from models.user import User
 from werkzeug.security import generate_password_hash
 from models.store import Store
@@ -13,6 +12,16 @@ app = Flask(__name__)
 # Configurations
 app.secret_key = "&\xb2\xc8\x80^H\xef\xb7\xc9\xb11\\\xf0\xe5}\xdd\xb8[O\x0b\tK\x0e\xbe"
 
+def login_required(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+			return f(*args, **kwargs)
+		else:
+			flash('Please Log into your ShoppingList Account first')
+			return redirect(url_for('login'))
+	return wrap
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
 	error = None
@@ -22,9 +31,11 @@ def home():
 			new_user = User(
 				username=request.form['username'],
 				email=request.form['email'],
-				password=request.form['password'],
+				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
 			)
+			new_user.save_user()
+			print(Store.users)
 			session['logged_in'] = True
 			session['current'] = new_user.user_data()
 			flash('Welcome ' + session['current']['username'])
@@ -51,10 +62,12 @@ def login():
 	return render_template("login.html", form=form, error=error)
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
 	return render_template("dashboard.html")
 
 @app.route('/logout')
+@login_required
 def logout():
 	# session.pop('logged_in', None)
 	# session.pop('username', None)
