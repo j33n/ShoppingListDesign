@@ -26,7 +26,6 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-	print(session['storage'])
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -85,6 +84,10 @@ def dashboard():
 		flash('Something went wrong')
 		return render_template("dashboard.html", form=form)
 	return render_template("dashboard.html", form=form)
+
+@app.route('/explore')
+def explore():
+	return render_template("explore.html")
 
 @app.route('/logout')
 @login_required
