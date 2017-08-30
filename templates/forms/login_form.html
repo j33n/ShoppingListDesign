@@ -1,0 +1,36 @@
+<form class="form-horizontal" role="form" action="" method="post">
+  {{ form.csrf_token }}
+  <div class="input-group">    
+    <span class="input-group-addon glyphicon glyphicon-user" aria-hidden="true"></span>
+    {{ form.username(placeholder="username", class="form-control") }}    
+  </div>
+  <span class="error">
+      {% if form.username.errors %}
+        {% for error in form.username.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+    </span>
+  <div class="input-group">
+    <span class="input-group-addon glyphicon glyphicon-lock" aria-hidden="true"></span>
+    {{ form.password(placeholder="password", class="form-control") }}        
+  </div>
+  <span class="warning">
+      {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+  </span>
+  {% if error %}
+    <p class="error" style="color:red">
+      <strong>Error: </strong>
+        {{ error }}
+    </p>
+  {% endif %}          
+  <div class="form-group last">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-success btn-sm">Login</button>
+    </div>
+  </div>                  
+</form>

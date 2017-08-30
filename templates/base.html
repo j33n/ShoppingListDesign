@@ -52,7 +52,10 @@
     </nav>  
     <div class="container-fluid sl_hero_content">
       <!-- Child templates -->
-      {% block content %}{% endblock %}
+      {% block content %}{% endblock %}     
+        {% for message in get_flashed_messages() %}
+          {{ message }}
+        {% endfor %}
     </div>
   </section>
   <section class="sl_footer">

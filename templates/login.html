@@ -11,21 +11,7 @@
         <strong class="">Enter Your ShoppingList account</strong>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" role="form" action="" method="post">
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-envelope" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Email" type="email" name="email" value="{{request.form.email}}">
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-lock" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Password" name="password" value="{{ request.form.password }}">
-          </div>             
-          <div class="form-group last">
-            <div class="col-sm-12">
-              <button type="submit" class="btn btn-success btn-sm">Login</button>
-            </div>
-          </div>                  
-        </form>
+        {% include 'forms/login_form.html' %}
       </div>
       <div class="panel-footer">Don't have an account? <a href="/" class="">Signup here</a>
       </div>

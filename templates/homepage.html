@@ -14,29 +14,7 @@
         <strong class="">Create a ShoppingList account</strong>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" role="form">
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-user" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Username">
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-envelope" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Email">
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-lock" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Password">
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon glyphicon glyphicon-lock" aria-hidden="true"></span>
-            <input class="form-control" placeholder="Confirm Password ...">
-          </div>              
-          <div class="form-group last">
-            <div class="col-sm-12">
-              <button type="submit" class="btn btn-success btn-sm">Sign Up</button>
-            </div>
-          </div>                  
-        </form>
+        {% include 'forms/register_form.html' %}
       </div>
       <div class="panel-footer">Alredy have an account? <a href="/login" class="">Signin here</a>
       </div>

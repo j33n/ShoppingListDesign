@@ -33,7 +33,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="/">
+              <a href="/logout">
                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                 Logout
               </a>
@@ -44,6 +44,11 @@
     </nav> 
     <div class="container-fluid sl_hero_content">
       <div class="row">
+      <h3 style="color:#fff">
+        {% for message in get_flashed_messages() %}
+          {{ message }}
+        {% endfor %}
+      </h3>      
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
          <h1>
            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
