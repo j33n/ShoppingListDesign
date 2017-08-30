@@ -2,8 +2,9 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
 from models.user import User
-from werkzeug.security import generate_password_hash
 from models.store import Store
+from werkzeug.security import generate_password_hash, \
+     check_password_hash
 from datetime import datetime
 from forms import RegisterForm, LoginForm
 
@@ -24,6 +25,7 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+	print(check_password_hash(session['storage']['password'], 'test'))
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -33,12 +35,11 @@ def home():
 				email=request.form['email'],
 				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
-			)
+			)			
 			new_user.save_user()
-			print(Store.users)
 			session['logged_in'] = True
-			session['current'] = new_user.user_data()
-			flash('Welcome ' + session['current']['username'])
+			Store().store_session(new_user.user_data())
+			flash('Welcome ' + session['storage']['username'])
 			return redirect(url_for('dashboard'))
 		return render_template("homepage.html", form=form, error=error)
 	return render_template("homepage.html", form=form, error=error)
@@ -49,13 +50,12 @@ def login():
 	form = LoginForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			if(request.form['username'] != 'admin')\
-				or request.form['password'] != 'admin':
+			if(request.form['username'] != session['storage']['email'])\
+				or check_password_hash(session['storage']['password'], request.form['password']) is False:
 				error = 'Invalid Credentials, Try Again'
 			else:
 				session['logged_in'] = True
-				session['username'] = request.form['username']
-				flash('Welcome ' + session['username'])
+				flash('Welcome back ' + session['storage']['username'])
 				return redirect(url_for('dashboard'))
 		else:
 			return render_template("login.html", form=form, error=error)
@@ -69,9 +69,7 @@ def dashboard():
 @app.route('/logout')
 @login_required
 def logout():
-	# session.pop('logged_in', None)
-	# session.pop('username', None)
-	session.clear()
+	session.pop('logged_in', None)
 	flash('We hope you enjoyed organizing and sharing list see you soon')
 	return redirect(url_for('home'))
 

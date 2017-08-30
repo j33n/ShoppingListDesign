@@ -1,11 +1,12 @@
 """ Our Storage will be stored here """
+from flask import session
 
 class Store(object):
     """ Storage module """
 
-    users = [{'username':'John'}]
+    users = []
     shoppinglists = []
-    listitems = []
+    items = []
 
     @classmethod
     def store_users(cls, user_data):
@@ -13,4 +14,7 @@ class Store(object):
 
         if(user_data):
         	Store.users.append(user_data)
+
+    def store_session(self, data_to_store):
+    	session['storage'] = data_to_store
         	

@@ -6,6 +6,7 @@ class User(object):
     """main class of the user"""
 
     def __init__(self, username, email, password, created_on, user_id=None):
+        """ Initialize app """
         self.username = username
         self.email = email
         self.password = password
@@ -24,7 +25,6 @@ class User(object):
         }
 
     def save_user(self):
-        """Save this user"""
-
+        """Save this user in a list"""
         Store.store_users(self.user_data)
         
