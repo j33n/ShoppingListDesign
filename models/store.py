@@ -9,12 +9,14 @@ class Store(object):
     items = []
 
     @classmethod
-    def store_users(cls, user_data):
+    def store_data(cls, data):
         """Adding users, lists and items"""
 
-        if(user_data):
-        	Store.users.append(user_data)
+        if(data):
+        	Store.users.append(data)
 
     def store_session(self, data_to_store):
     	session['storage'] = data_to_store
+    def newlist_session(self, list_to_store):
+        session['storage']['shoppinglists'].append(list_to_store)
         	

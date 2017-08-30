@@ -3,10 +3,11 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from functools import wraps
 from models.user import User
 from models.store import Store
+from models.shoppinglist import ShoppingList
 from werkzeug.security import generate_password_hash, \
      check_password_hash
 from datetime import datetime
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, ListForm
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-	print(check_password_hash(session['storage']['password'], 'test'))
+	print(session['storage'])
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -38,8 +39,12 @@ def home():
 			)			
 			new_user.save_user()
 			session['logged_in'] = True
-			Store().store_session(new_user.user_data())
-			flash('Welcome ' + session['storage']['username'])
+			Store().store_session([new_user.user_data()])
+			flash(
+				'Welcome ' + session['storage']
+				[len(session['storage'])-1]
+				['username']
+			)
 			return redirect(url_for('dashboard'))
 		return render_template("homepage.html", form=form, error=error)
 	return render_template("homepage.html", form=form, error=error)
@@ -51,7 +56,8 @@ def login():
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			if(request.form['username'] != session['storage']['email'])\
-				or check_password_hash(session['storage']['password'], request.form['password']) is False:
+				or check_password_hash(
+					session['storage']['password'], request.form['password']) is False:
 				error = 'Invalid Credentials, Try Again'
 			else:
 				session['logged_in'] = True
@@ -61,16 +67,30 @@ def login():
 			return render_template("login.html", form=form, error=error)
 	return render_template("login.html", form=form, error=error)
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-	return render_template("dashboard.html")
+	form = ListForm(request.form)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			new_list = ShoppingList(
+				owner_id=session['storage']['user_id'],
+				title=request.form['title'],
+				description=request.form['description'],
+				created_on=datetime.now()
+			)
+			Store().newlist_session(new_list.list_data())			
+			flash('List created successfuly')
+			return render_template("dashboard.html", form=form)
+		flash('Something went wrong')
+		return render_template("dashboard.html", form=form)
+	return render_template("dashboard.html", form=form)
 
 @app.route('/logout')
 @login_required
 def logout():
 	session.pop('logged_in', None)
-	flash('We hope you enjoyed organizing and sharing list see you soon')
+	flash('We hope you enjoyed organizing and sharing lists see you soon')
 	return redirect(url_for('home'))
 
 if __name__ == '__main__':

@@ -50,10 +50,15 @@
         {% endfor %}
       </h3>      
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
-         <h1>
-           <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-           Add a new List
-         </h1>       
+         <div class="row">
+          <h1>
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              Add a new List
+            </h1>
+         </div>
+         <div class="row new_list">
+           {% include 'forms/new_list_form.html' %}
+         </div>
        </div>
        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 sl_hero_display">
         <div class="sl_item_title">
