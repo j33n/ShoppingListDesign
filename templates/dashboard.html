@@ -64,27 +64,27 @@
         <div class="sl_item_title">
           <h2>All Lists</h2>          
         </div>
-        <div class="row sl_item_row" style="background-color: beige">
-          <h5>
-            {% for key, value in data.items() %}
-              {% if key== "title" %}
-                {{ value }}
-              {% endif %}
+        <div class="row sl_item_row" style="background-color: beige">            
+            {% for dict_item in data %}
+              {% for key, value in dict_item.items() %}
+                {% if key == "title" or key == "description" or key == "created_on" %}            
+                  <div class="panel panel-success">                    
+                      {% if key == "title" %}
+                      <div class="panel-heading" style="margin: 0">
+                        <h3 class="panel-title">{{value}}</h3>
+                      </div>
+                      {% endif %}                    
+                      {% if key == "description" %}
+                        <div class="panel-body"> {{value}} </div>
+                      {% endif %}
+                      {% if key == "created_on" %}
+                        <div class="panel-footer">{{value}}</div>                        
+                      {% endif %}                                      
+                  </div>
+                  {% endif %} 
+              {% endfor %}
             {% endfor %}
-            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-          </h5>
-          <p>
-          {% for key, value in data.items() %}
-            {% if key== "description" %}
-              {{ value }} 
-            {% endif %}
-          {% endfor %}
-          </p>
-          <h6>29/August/2017
-            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" style="padding-left: 80%">
-            </span>
-          </h6>          
-        </div>
+          </div>
       </div>
     </div>
   </div>

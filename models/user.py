@@ -24,9 +24,9 @@ class User(object):
             'password' : self.password,            
             'created_on' : self.created_on,
             'shoppinglists': self.shoppinglists
-        }
+        }    
 
     def save_user(self):
         """Save this user in a list"""
-        Store.store_data(self.user_data)
-        
+
+        Store().store_data(self.user_data())

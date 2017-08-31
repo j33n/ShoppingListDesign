@@ -27,7 +27,8 @@ class ShoppingList(object):
             'items': self.items
         }
 
+
     def save_list(self):
-        """Save this list"""
-        Store.store_data(self.list_data)
+        """Save this list"""        
+        return Store().store_data(self.list_data())
         
