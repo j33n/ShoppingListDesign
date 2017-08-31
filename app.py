@@ -12,7 +12,8 @@ from forms import RegisterForm, LoginForm, ListForm
 app = Flask(__name__)
 
 # Configurations
-app.secret_key = "&\xb2\xc8\x80^H\xef\xb7\xc9\xb11\\\xf0\xe5}\xdd\xb8[O\x0b\tK\x0e\xbe"
+import os
+app.config.from_object(os.environ['APP_SETTINGS'])
 
 def login_required(f):
 	@wraps(f)
@@ -54,13 +55,13 @@ def login():
 	form = LoginForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			if(request.form['username'] != session['storage']['email'])\
+			if(request.form['username'] != session['storage'][len(session['storage'])-1]['email'])\
 				or check_password_hash(
-					session['storage']['password'], request.form['password']) is False:
+					session['storage'][len(session['storage'])-1]['password'], request.form['password']) is False:
 				error = 'Invalid Credentials, Try Again'
 			else:
 				session['logged_in'] = True
-				flash('Welcome back ' + session['storage']['username'])
+				flash('Welcome back ' + session['storage'][len(session['storage'])-1]['username'])
 				return redirect(url_for('dashboard'))
 		else:
 			return render_template("login.html", form=form, error=error)
@@ -73,7 +74,7 @@ def dashboard():
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_list = ShoppingList(
-				owner_id=session['storage']['user_id'],
+				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
 				title=request.form['title'],
 				description=request.form['description'],
 				created_on=datetime.now()
