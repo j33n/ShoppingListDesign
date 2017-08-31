@@ -27,8 +27,6 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-	if session.get('storage') is not None:
-		print(session['storage'])
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -76,6 +74,11 @@ def login():
 @login_required
 def dashboard():
 	form = ListForm(request.form)
+	if session.get('storage') is not None:
+		if len(session['storage'][len(session['storage'])-1]['shoppinglists']) != 0:
+			my_list = session['storage'][len(session['storage'])-1]['shoppinglists'][0]
+		else:
+			my_list = {}
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_list = ShoppingList(
@@ -84,12 +87,18 @@ def dashboard():
 				description=request.form['description'],
 				created_on=datetime.now()
 			)
-			Store().newlist_session(new_list.list_data())			
-			flash('List created successfuly')
-			return render_template("dashboard.html", form=form)
-		flash('Something went wrong')
-		return render_template("dashboard.html", form=form)
-	return render_template("dashboard.html", form=form)
+			if(Store().newlist_session(new_list.list_data())):			
+				flash('List created successfuly')
+				return render_template(
+					"dashboard.html",
+					form=form,
+					data=my_list
+				)
+	return render_template(
+		"dashboard.html",
+		form=form,
+		data=my_list
+	)
 
 @app.route('/explore')
 def explore():

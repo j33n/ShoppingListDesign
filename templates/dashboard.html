@@ -62,16 +62,27 @@
        </div>
        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 sl_hero_display">
         <div class="sl_item_title">
-          <h2>All Lists</h2>
+          <h2>All Lists</h2>          
         </div>
         <div class="row sl_item_row" style="background-color: beige">
           <h5>
-            Lorem ipsum dolor sit amet.
+            {% for key, value in data.items() %}
+              {% if key== "title" %}
+                {{ value }}
+              {% endif %}
+            {% endfor %}
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
           </h5>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing.</p>
+          <p>
+          {% for key, value in data.items() %}
+            {% if key== "description" %}
+              {{ value }} 
+            {% endif %}
+          {% endfor %}
+          </p>
           <h6>29/August/2017
-            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" style="padding-left: 80%"></span>
+            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" style="padding-left: 80%">
+            </span>
           </h6>          
         </div>
       </div>

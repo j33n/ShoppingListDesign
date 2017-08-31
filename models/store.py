@@ -35,5 +35,6 @@ class Store(object):
                 return True
             
     def newlist_session(self, list_to_store):
-        session['storage']['shoppinglists'].append(list_to_store)
+        session['storage'][len(session['storage'])-1]['shoppinglists'].append(list_to_store)
+        return True
         	
