@@ -31,6 +31,11 @@ pip install -r requirements.txt
 python app.py
 
 ```
+To run tests
+```
+nosetests tests.py
+
+```
 
 ## Authors
 
