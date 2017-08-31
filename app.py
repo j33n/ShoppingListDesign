@@ -27,6 +27,8 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+	if session.get('storage') is not None:
+		print(session['storage'])
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -37,15 +39,18 @@ def home():
 				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
 			)			
-			new_user.save_user()
-			session['logged_in'] = True
-			Store().store_session([new_user.user_data()])
-			flash(
-				'Welcome ' + session['storage']
-				[len(session['storage'])-1]
-				['username']
-			)
-			return redirect(url_for('dashboard'))
+			new_user.save_user()			
+			if(Store().store_session(new_user.user_data())):
+				flash(
+					'Welcome ' + session['storage']
+					[len(session['storage'])-1]
+					['email']
+				)
+				session['logged_in'] = True				
+				return redirect(url_for('dashboard'))
+			else:
+				flash("User already exists")
+				return redirect(url_for('home'))
 		return render_template("homepage.html", form=form, error=error)
 	return render_template("homepage.html", form=form, error=error)
 

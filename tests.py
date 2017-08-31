@@ -89,6 +89,27 @@ class FlaskTestCase(unittest.TestCase):
 		)
 		self.assertTrue(b'Welcome back' in response.data)
 
+	def test_account_duplication(self):
+		account1 = self.client.post(
+			'/',
+			data=self.user,
+			follow_redirects=True
+		)
+		account2 = self.client.post(
+			'/',
+			data=self.user,
+			follow_redirects=True
+		)
+		account3 = self.client.post(
+			'/',
+			data=self.user,
+			follow_redirects=True
+		)
+		self.assertTrue(b'Add a new List' in account1.data)
+		self.assertTrue(b'User already exists' in account2.data)
+		self.assertTrue(b'User already exists' in account3.data)
+
+
 
 if __name__ == '__main__':
 	unittest.main()
