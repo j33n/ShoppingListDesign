@@ -23,8 +23,8 @@ class User(object):
             'email': self.email,
             'password' : self.password,            
             'created_on' : self.created_on,
-            'shoppinglists': self.shoppinglists
-        }    
+            'shoppinglists' : self.shoppinglists
+        }
 
     def save_user(self):
         """Save this user in a list"""

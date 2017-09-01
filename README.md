@@ -20,11 +20,13 @@ I am using basic CSS, bootstrap and jQuery for the template and Flask to serve t
 
 ### Installing
 
-To get up and running with it, basically just clone this repository, switch in that folder then setup flask and finally run the flask server
+To get up and running with it, basically just clone this repository, switch in that folder then setup flask and finally run the flask server.
+Also set environment variables from repository settings
 
 ```
 git clone https://github.com/JeanAbayo/ShoppingListDesign.git
 cd ShoppingListDesign
+export APP_SETTINGS="config.TestingConfig"
 virtuaelenv venv
 source dir/to/venv
 pip install -r requirements.txt

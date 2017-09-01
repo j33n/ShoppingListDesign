@@ -130,3 +130,19 @@ section.sl_hero .sl_hero_content a.btn:hover{
     	right: 0;
 	}
 }
+.sl_hero_display.list_display{
+
+}
+.row.sl_item_row{
+	background-color: rgba(0,0,0,0.5);
+	overflow-y: scroll;
+	max-height: 500px;
+}
+.row.sl_item_row .panel {	
+	line-height: unset;
+	margin-bottom: 0;
+	border-radius: 0;
+	border: 0;
+	box-shadow: unset;
+
+}
