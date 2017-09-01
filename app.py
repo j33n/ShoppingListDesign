@@ -27,7 +27,7 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-	serve_list()
+	
 	error = None
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
@@ -111,6 +111,19 @@ def serve_list():
 		all_lists = session['storage'][len(session['storage'])-1]['shoppinglists']
 		return all_lists
 
+@app.route('/edit-list/<list_id>')
+def edit_list(list_id):
+	# print(serve_list())
+	form = ListForm(request.form)
+	Store().edit_lists('6221b075281f48609114bc3848670098')
+	flash('This functionality is still in maintenance')
+	return render_template(
+		"dashboard.html",
+		form=form,
+		data=serve_list()
+	)
+
+
 @app.route('/add-item/<list_id>')
 def add_item(list_id):
 	form = ListForm(request.form)
@@ -122,16 +135,6 @@ def add_item(list_id):
 		data=serve_list()
 	)
 
-@app.route('/edit-list/<list_id>')
-def edit_list(list_id):
-	form = ListForm(request.form)
-	Store().edit_lists()
-	flash('This functionality is still in maintenance')
-	return render_template(
-		"dashboard.html",
-		form=form,
-		data=serve_list()
-	)
 
 @app.route('/delete-list/<list_id>')
 def delete_list(list_id):
