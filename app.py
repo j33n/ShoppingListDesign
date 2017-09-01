@@ -43,7 +43,7 @@ def home():
 				flash(
 					'Welcome ' + session['storage']
 					[len(session['storage'])-1]
-					['email']
+					['username']
 				)
 				session['logged_in'] = True				
 				return redirect(url_for('dashboard'))
@@ -111,12 +111,38 @@ def serve_list():
 		all_lists = session['storage'][len(session['storage'])-1]['shoppinglists']
 		return all_lists
 
-def edit_list():
-	pass
+@app.route('/add-item/<list_id>')
+def add_item(list_id):
+	form = ListForm(request.form)
+	Store().edit_lists(list_id)
+	flash('This functionality is still in maintenance')
+	return render_template(
+		"dashboard.html",
+		form=form,
+		data=serve_list()
+	)
 
-def delete_list():
-	pass
+@app.route('/edit-list/<list_id>')
+def edit_list(list_id):
+	form = ListForm(request.form)
+	Store().edit_lists()
+	flash('This functionality is still in maintenance')
+	return render_template(
+		"dashboard.html",
+		form=form,
+		data=serve_list()
+	)
 
+@app.route('/delete-list/<list_id>')
+def delete_list(list_id):
+	form = ListForm(request.form)
+	Store().edit_lists(list_id)
+	flash('This functionality is still in maintenance')
+	return render_template(
+		"dashboard.html",
+		form=form,
+		data=serve_list()
+	)
 
 @app.route('/explore')
 def explore():

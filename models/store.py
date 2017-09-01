@@ -18,6 +18,9 @@ class Store(object):
             self.users.append(data)
             return self.users[0]
 
+    def edit_lists(self, user_id, list_id):
+        for list_n in range(1, len(self.shoppinglists)):
+            return self.shoppinglists
 
     def check_list(self, list_to_check):
         """Check if the list is already created"""
