@@ -34,6 +34,14 @@
             </li>          
           </ul>
           <ul class="nav navbar-nav navbar-right">
+          {% if session['logged_in'] == True %}
+            <li>
+            <a href="/logout">
+              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+              Logout
+            </a>
+          </li>
+          {% else %}
             <li>
               <a href="/login">
                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
@@ -45,17 +53,21 @@
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                 Signup
               </a>
-            </li>          
+            </li>
+            {% endif %}                      
           </ul>
         </div>
       </div>
     </nav>  
     <div class="container-fluid sl_hero_content">
       <!-- Child templates -->
-      {% block content %}{% endblock %}     
+
+      {% block content %}{% endblock %}
+        <p class="bg-danger" width="150px" style="float: right; font-size: 15px">  
         {% for message in get_flashed_messages() %}
           {{ message }}
         {% endfor %}
+        </p>
     </div>
   </section>
   <section class="sl_footer">

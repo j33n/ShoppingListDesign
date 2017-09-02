@@ -31,4 +31,9 @@ class ShoppingList(object):
     def save_list(self):
         """Save this list"""        
         return Store().store_data(self.list_data())
+
+    def update_list(self, list_id):
+        """Update a list"""
+        return Store().store_data(self.list_data())
+
         

@@ -1,11 +1,15 @@
 """ Our Storage will be stored here """
 from flask import session
+import datetime
 
 class Store(object):
     """ Storage module """
     def __init__(self):
         self.users = []
-        self.shoppinglists = []
+        self.shoppinglists = [
+        {'owner_id': '00ea419d1ce1403eb85a13191e435d18', 'description': 'Lorem', 'items': [], 'title': 'Setting up my first tweet', 'list_id': '359fca18acd440028b6e3311860dc89e', 'created_on': datetime.datetime(2017, 9, 1, 12, 13, 10)},
+        {'owner_id': '00ea419d1ce1403eb85a13191e435d18', 'description': 'Lorem', 'items': [], 'title': 'Setting up my first tweet', 'list_id': '29177ccbadf54c4891d7e308921afaef', 'created_on': datetime.datetime(2017, 9, 1, 12, 13, 34)}
+        ]
         self.items = []
 
 
@@ -18,24 +22,29 @@ class Store(object):
             self.users.append(data)
             return self.users[0]
 
-    def edit_lists(self, list_id):
-        for list_n in range(1, len(self.shoppinglists)):
-            if self.shoppinglists[list_n]['list_id'] is not list_id:
-                return True
-            else:
-                return False
+    def check_list(self, list_id):
+        """" Check list is present """
+        
+        check_true = []
+        for list_n in range(0, len(self.shoppinglists)):            
+            check_true.append(list_id in self.shoppinglists[list_n].values())
+        if True in check_true:
+            return True
+        return False
 
-    def check_list(self, list_to_check):
-        """Check if the list is already created"""
+    def get_list_data(self, list_id):
+        """ Getting the data for a certain list """
 
         for list_n in range(0, len(self.shoppinglists)):
-            return bool(list_to_check in self.shoppinglists[list_n].keys())
+            l_data = list_id in self.shoppinglists[list_n].values()
+            if l_data is True:
+                return self.shoppinglists[list_n]
 
     def email_exists(self, email):
         """Check if the user is already registered"""
 
         for sess_n in range(0, len(session['storage'])):
-            if (session['storage'][sess_n]['email'] == email):
+            if session['storage'][sess_n]['email'] == email:
                 return True
             else:
                 return False

@@ -1,6 +1,6 @@
 """this module handles the field defination of registration and bucketlist creation"""
 from flask_wtf import FlaskForm
-from wtforms import TextField, PasswordField, validators, TextAreaField
+from wtforms import TextField, PasswordField, validators, TextAreaField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 class LoginForm(FlaskForm):
@@ -31,3 +31,8 @@ class RegisterForm(FlaskForm):
 class ListForm(FlaskForm):
     title = TextField('Title', validators=[DataRequired()])
     description = TextAreaField('Content', validators=[DataRequired(), Length(max=225)])
+
+class EditList(FlaskForm):
+    title = TextField('Title', validators=[DataRequired()])
+    description = TextAreaField('Content', validators=[DataRequired(), Length(max=225)])
+    hidden = HiddenField('Hidden')

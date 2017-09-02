@@ -7,7 +7,7 @@ from models.shoppinglist import ShoppingList
 from werkzeug.security import generate_password_hash, \
      check_password_hash
 from datetime import datetime
-from forms import RegisterForm, LoginForm, ListForm
+from forms import RegisterForm, LoginForm, ListForm, EditList
 
 app = Flask(__name__)
 
@@ -49,6 +49,7 @@ def home():
 				return redirect(url_for('dashboard'))
 			else:
 				flash("User already exists")
+				error = "User already exists"
 				return redirect(url_for('home'))
 		return render_template("homepage.html", form=form, error=error)
 	return render_template("homepage.html", form=form, error=error)
@@ -112,40 +113,57 @@ def serve_list():
 		return all_lists
 
 @app.route('/edit-list/<list_id>')
-def edit_list(list_id):
+@login_required
+def edit_list(list_id, methods=['GET', 'POST']):
+	"""This route allows a user to change a list"""
 	# print(serve_list())
-	form = ListForm(request.form)
-	Store().edit_lists('6221b075281f48609114bc3848670098')
-	flash('This functionality is still in maintenance')
-	return render_template(
-		"dashboard.html",
-		form=form,
-		data=serve_list()
-	)
+	form = EditList(request.form)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			renew_list = ShoppingList(
+				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
+				title=request.form['title'],
+				description=request.form['description'],
+				list_id=list_id,
+				created_on=request.form['hidden']
+			)
+			renew_list.update_list(list_id)
+	
+	store = Store()
+	if store.check_list(list_id):
+		flash('You can edit your list here')
+		serve_temp = store.get_list_data(list_id)
+		return render_template(
+			"includes/edit_list.html",
+			form=form,
+			data=serve_list(),
+			form_data=serve_temp
+		)
+	flash('list can not be found')
 
 
-@app.route('/add-item/<list_id>')
-def add_item(list_id):
-	form = ListForm(request.form)
-	Store().edit_lists(list_id)
-	flash('This functionality is still in maintenance')
-	return render_template(
-		"dashboard.html",
-		form=form,
-		data=serve_list()
-	)
+# @app.route('/add-item/<list_id>')
+# def add_item(list_id):
+# 	form = ListForm(request.form)
+# 	Store().edit_lists(list_id)
+# 	flash('This functionality is still in maintenance')
+# 	return render_template(
+# 		"dashboard.html",
+# 		form=form,
+# 		data=serve_list()
+# 	)
 
 
-@app.route('/delete-list/<list_id>')
-def delete_list(list_id):
-	form = ListForm(request.form)
-	Store().edit_lists(list_id)
-	flash('This functionality is still in maintenance')
-	return render_template(
-		"dashboard.html",
-		form=form,
-		data=serve_list()
-	)
+# @app.route('/delete-list/<list_id>')
+# def delete_list(list_id):
+# 	form = ListForm(request.form)
+# 	Store().edit_lists(list_id)
+# 	flash('This functionality is still in maintenance')
+# 	return render_template(
+# 		"dashboard.html",
+# 		form=form,
+# 		data=serve_list()
+# 	)
 
 @app.route('/explore')
 def explore():
@@ -155,6 +173,7 @@ def explore():
 @login_required
 def logout():
 	session.pop('logged_in', None)
+	session.pop('email', None)
 	flash('We hope you enjoyed organizing and sharing lists see you soon')
 	return redirect(url_for('home'))
 

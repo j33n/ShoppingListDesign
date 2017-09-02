@@ -15,7 +15,7 @@ class User(object):
         self.shoppinglists = []
 
     def user_data(self):
-        """All user data"""
+        """ All user data """
 
         return {
             'user_id' : self.user_id,

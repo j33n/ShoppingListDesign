@@ -1,0 +1,41 @@
+<div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
+    <div class="sl_item_title">
+      <h2>All Lists</h2>          
+    </div>
+    <div class="row sl_item_row">            
+      {% for dict_item in data %}
+      {% for key, value in dict_item.items() %}
+      <div class="panel panel-success">                    
+        {% if key == "title" %}
+        <div class="panel-heading">
+          <h3 class="panel-title">{{value}}</h3>
+        </div>
+        {% elif key == "description" %}
+        <div class="panel-body"> {{value}} </div>
+        {% elif key == "created_on" %}
+        <div class="panel-footer">{{value}}
+          {% elif key == "list_id" %}
+          <div class="btn-group btn-group-justified" style="margin-top:10px" role="group" aria-label="...">
+            <a href="/edit-list/{{value}}">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success">Edit</button>
+              </div>
+            </a>
+            <a href="/add-item/{{value}}">                                  
+              <div classs="btn-group" role="group">              
+                <button type="button" class="btn btn-warning">Add Items</button>
+              </div>
+            </a>
+            <a href="/delete-list/{{value}}">        
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-danger">Delete</button>
+              </div>
+            </a>          
+          </div>
+        </div>
+        {% endif %}                                     
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
