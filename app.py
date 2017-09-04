@@ -42,13 +42,12 @@ def home():
 
 			# Validates user exists or is saved
 			user = new_user.save_user()
-
-			if user != False:				
+			if user != False:
 				session['logged_in'] = True
 				session['user'] = request.form['email']
-				store.store_session(user)
+				# store.store_session(user)
 				flash(
-					'Welcome ' + session['storage']
+					'Welcome ' + store.users
 					[store.user_logged_in()]
 					['username']
 				)
@@ -66,10 +65,10 @@ def login():
 	form = LoginForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			if store.check_login(request.form['username'], request.form['password'], 'session'):
+			if store.check_login(request.form['username'], request.form['password']):
 				session['logged_in'] = True
 				session['user'] = request.form['username']
-				flash('Welcome back ' + session['storage'][store.user_logged_in()]['username'])
+				flash('Welcome back ' + store.users[store.user_logged_in()]['username'])
 				return redirect(url_for('dashboard'))					
 				error = 'Invalid Credentials, Try Again'
 				return render_template("login.html", form=form, error=error)		
@@ -81,31 +80,50 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+	error = None
+	store = Store()
+	print(store.users[store.user_logged_in()]['shoppinglists'])
 	form = ListForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_list = ShoppingList(
-				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
+				owner_id=store.users[store.user_logged_in()]['user_id'],
 				title=request.form['title'],
 				description=request.form['description'],
 				created_on=datetime.now()
 			)
 			new_list.save_list()
-			print(session['storage'])
-			print(Store().store_session(new_list.save_list()))
+
+			# if Store().store_session(new_list.save_list()):
+				# print(Store().store_session(new_list.save_list()))
 			flash('List created successfuly')
 			return render_template(
 				"dashboard.html",
 				form=form,
-				data=session['storage'][Store().user_logged_in()]['shoppinglists']
+				data=store.users[store.user_logged_in()]['shoppinglists']
 			)
-
-			# print(session['storage'][Store().user_logged_in()]['shoppinglists'])
+		return render_template(
+			"dashboard.html",
+			form=form,
+			data=store.users[store.user_logged_in()]['shoppinglists']
+		)			
 	return render_template(
 		"dashboard.html",
-		form=form,
-		data = session['storage'][Store().user_logged_in()]['shoppinglists']
+		form=form
 	)
+	# if Store().store_session(new_list.save_list()):
+			# 	print(Store().store_session(new_list.save_list()))
+			# 	
+			# 	
+			# else:
+			# 	print(Store().store_session(new_list.save_list()))
+			# 	flash('List already exists')
+			# 	return render_template(
+			# 		"dashboard.html",
+			# 		form=form,
+			# 		error=error,
+			# 		data=session['storage'][Store().user_logged_in()]['shoppinglists']
+			# 	)
 
 
 # @app.route('/dashboard', methods=['GET', 'POST'])
