@@ -63,25 +63,7 @@ class Store(object):
             cur_data = self.get_list_data(data_to_update['list_id'])
             cur_data['title'] = data_to_update['title']
             cur_data['description'] = data_to_update['description']
-            return self.shoppinglists
-
-
-
-
-
-    def check_list(self, list_id):
-        """" Check list is present """
-        
-        check_true = []
-        for list_n in range(0, len(self.shoppinglists)):            
-            check_true.append(list_id in self.shoppinglists[list_n].values())
-        if True in check_true:
-            return True
-        return False
-
-    # def serve_session(self):
-    #     self.shoppinglists = session['storage']['shoppinglists']
-    #     return self.shoppinglists
+            return self.shoppinglists    
 
     def get_list_data(self, list_id):
         """ Getting the data for a certain list """
@@ -90,6 +72,9 @@ class Store(object):
             l_data = list_id in self.shoppinglists[list_n].values()
             if l_data is True:
                 return self.shoppinglists[list_n]
+
+
+
 
 
     def user_logged_in(self):
@@ -105,18 +90,18 @@ class Store(object):
         if for_check == 'email':
             if session.get('storage') is not None:
                 for sess_item in range(0, len(session['storage'])):
-                    return bool(session['storage'][sess_item][to_check[0]] == to_check[1])
+                    if session['storage'][sess_item][to_check[0]] == to_check[1]:
+                        return True
 
         elif for_check == 'title':
-            # for l_item in range(0, len(session['storage'][self.user_logged_in()]['shoppinglists'])):
-            #     return bool(session['storage'][self.user_logged_in()]['shoppinglists'][l_item][to_check[0]] == to_check[1])
-            return 'title'
-            # return session['storage'][self.user_logged_in()]['shoppinglists']
+            for l_item in range(0, len(session['storage'][self.user_logged_in()]['shoppinglists'])):
+                if session['storage'][self.user_logged_in()]['shoppinglists'][l_item][to_check[0]] == to_check[1]:
+                    return True
         else:
             return "Invalid search"
 
     def store_session(self, data_to_store):
-        """ Store user session and check there is no other email to conflict with"""
+        """ Store user/list in session and check there is no other to conflict with"""
 
         if 'email' in data_to_store[0]:
             validate = ['email', data_to_store[0]['email']]
@@ -132,13 +117,9 @@ class Store(object):
                     return "User added succesfully in session"
 
         elif 'title' in data_to_store[0]:
-            # validate = ['title', data_to_store[0]['title']]
-            # # return self.check_in_session('title', validate)
-            # if self.check_in_session('title', validate) is True:
-            #     return "List already exists"
-            # else:
-            session['storage'][0]['shoppinglists'] + data_to_store
-            return session['storage'][self.user_logged_in()]['shoppinglists']
-
-            
-        	
+            validate = ['title', data_to_store[0]['title']]
+            if self.check_in_session('title', validate) is True:
+                return "List already exists"
+            else:
+                session['storage'][self.user_logged_in()]['shoppinglists'].extend(data_to_store)
+                return "List added to session successfuly"

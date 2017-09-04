@@ -91,7 +91,15 @@ def dashboard():
 				created_on=datetime.now()
 			)
 			new_list.save_list()
+			print(session['storage'])
 			print(Store().store_session(new_list.save_list()))
+			flash('List created successfuly')
+			return render_template(
+				"dashboard.html",
+				form=form,
+				data=session['storage'][Store().user_logged_in()]['shoppinglists']
+			)
+
 			# print(session['storage'][Store().user_logged_in()]['shoppinglists'])
 	return render_template(
 		"dashboard.html",
