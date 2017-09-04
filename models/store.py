@@ -1,32 +1,61 @@
 """ Our Storage will be stored here """
 from flask import session
 import datetime
+from werkzeug.security import check_password_hash
 
 class Store(object):
     """ Storage module """
     def __init__(self):
         self.users = []
-        # self.shoppinglists = [
-        # {'owner_id': '00ea419d1ce1403eb85a13191e435d18', 'description': 'Lorem', 'items': [], 'title': 'Setting up my first tweeeeeeeeeeeeeeeeeeeeeeeeeeesst', 'list_id': '359fca18acd440028b6e3311860dc89e', 'created_on': datetime.datetime(2017, 9, 1, 12, 13, 10)},
-        # {'owner_id': '00ea419d1ce1403eb85a13191e435d18', 'description': 'Lorem', 'items': [], 'title': 'Setting up my first tweet', 'list_id': '29177ccbadf54c4891d7e308921afaef', 'created_on': datetime.datetime(2017, 9, 1, 12, 13, 34)}
-        # ]
         self.shoppinglists = []
-        self.items = []
-
-    def user_logged_in(self):
-        for user_n in range(0, len(session['storage'])):
-            if session['storage'][user_n]['email'] == session['user']:
-                return user_n
+        self.items = []   
 
 
     def store_data(self, data):
         """Adding users, lists and items"""
+
         if 'title' in data:
-            self.shoppinglists.append(data)
-            return self.shoppinglists[0]
+            if self.check_exists(data['title'], 'title'):
+                return False
+            else:
+                self.shoppinglists.append(data)
+                return self.shoppinglists
         elif 'email' in data:
-            self.users.append(data)
-            return self.users[0]
+            if self.check_exists(data['email'], 'email'):
+                return False
+            else:
+                self.users.append(data)
+                return self.users
+
+
+    def check_exists(self, check_in, check_for):
+        if check_for == 'email':
+            search = self.users
+        elif check_for == 'title':
+            search = self.shoppinglists
+        elif check_for == 'item_title':
+            search = self.items
+        else:
+            return "Invalid search"
+        for sess_n in range(0, len(search)):
+                return bool(search[sess_n][check_for] == check_in)
+
+
+    def check_login(self, email, password, login):
+        """Check either data or session login"""
+
+        if login == "session":
+            if session.get('storage') is not None:
+                login_action = session['storage']
+            else:
+                login_action = self.users
+        else:
+            login_action = self.users
+
+        for log_n in range(0, len(login_action)):
+            return bool(email == login_action[log_n]['email'] and check_password_hash(
+                        login_action[log_n]['password'], password) is True)
+
 
     def update_data(self, data_to_update):
         """Allow user to update his lists"""
@@ -62,31 +91,54 @@ class Store(object):
             if l_data is True:
                 return self.shoppinglists[list_n]
 
-    def email_exists(self, email):
-        """Check if the user is already registered"""
 
-        for sess_n in range(0, len(session['storage'])):
-            if session['storage'][sess_n]['email'] == email:
-                return True
-            else:
-                return False
-        
+    def user_logged_in(self):
+        """Get a key index for a logged in user"""
+
+        for user_n in range(0, len(session['storage'])):
+            if session['storage'][user_n]['email'] == session['user']:
+                return user_n
+
+    def check_in_session(self, for_check, to_check):
+        """Check if a user exists in session"""
+
+        if for_check == 'email':
+            if session.get('storage') is not None:
+                for sess_item in range(0, len(session['storage'])):
+                    return bool(session['storage'][sess_item][to_check[0]] == to_check[1])
+
+        elif for_check == 'title':
+            # for l_item in range(0, len(session['storage'][self.user_logged_in()]['shoppinglists'])):
+            #     return bool(session['storage'][self.user_logged_in()]['shoppinglists'][l_item][to_check[0]] == to_check[1])
+            return 'title'
+            # return session['storage'][self.user_logged_in()]['shoppinglists']
+        else:
+            return "Invalid search"
 
     def store_session(self, data_to_store):
-        """ Store user session and check there is no other email to conflict"""
+        """ Store user session and check there is no other email to conflict with"""
 
-        if session.get('storage') is None:
-            session['storage'] = []
-            session['storage'].append(data_to_store)
-            return True
-        else:
-            if(self.email_exists(data_to_store['email'])):
-                return False
+        if 'email' in data_to_store[0]:
+            validate = ['email', data_to_store[0]['email']]
+            if session.get('storage') is None:
+                session['storage'] = []
+                session['storage'].append(data_to_store[0])
+                return "The first user of this session created"
             else:
-                session['storage'].append(data_to_store)
-                return True
+                if self.check_in_session('email', validate):
+                    return "User already exist in session"
+                else:
+                    session['storage'].append(data_to_store[0])
+                    return "User added succesfully in session"
+
+        elif 'title' in data_to_store[0]:
+            # validate = ['title', data_to_store[0]['title']]
+            # # return self.check_in_session('title', validate)
+            # if self.check_in_session('title', validate) is True:
+            #     return "List already exists"
+            # else:
+            session['storage'][0]['shoppinglists'] + data_to_store
+            return session['storage'][self.user_logged_in()]['shoppinglists']
+
             
-    def newlist_session(self, list_to_store):
-        session['storage'][len(session['storage'])-1]['shoppinglists'].append(list_to_store)
-        return True
         	

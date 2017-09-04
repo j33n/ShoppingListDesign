@@ -4,8 +4,7 @@ from functools import wraps
 from models.user import User
 from models.store import Store
 from models.shoppinglist import ShoppingList
-from werkzeug.security import generate_password_hash, \
-     check_password_hash
+from werkzeug.security import generate_password_hash
 from datetime import datetime
 from forms import RegisterForm, LoginForm, ListForm, EditList
 
@@ -16,6 +15,8 @@ import os
 app.config.from_object(os.environ['APP_SETTINGS'])
 
 def login_required(f):
+	"""Allow some routes to be accessed when logged_in"""
+
 	@wraps(f)
 	def wrap(*args, **kwargs):
 		if 'logged_in' in session:
@@ -26,9 +27,9 @@ def login_required(f):
 	return wrap
 
 @app.route('/', methods=['GET', 'POST'])
-def home():	
-	print(Store().user_logged_in())
+def home():
 	error = None
+	store = Store()
 	form = RegisterForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
@@ -37,19 +38,22 @@ def home():
 				email=request.form['email'],
 				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
-			)			
-			new_user.save_user()			
-			if(Store().store_session(new_user.user_data())):
+			)
+
+			# Validates user exists or is saved
+			user = new_user.save_user()
+
+			if user != False:				
+				session['logged_in'] = True
+				session['user'] = request.form['email']
+				store.store_session(user)
 				flash(
 					'Welcome ' + session['storage']
-					[len(session['storage'])-1]
+					[store.user_logged_in()]
 					['username']
 				)
-				session['logged_in'] = True
-				session['user'] = request.form['email']			
 				return redirect(url_for('dashboard'))
 			else:
-				flash("User already exists")
 				error = "User already exists"
 				return redirect(url_for('home'))
 		return render_template("homepage.html", form=form, error=error)
@@ -58,22 +62,21 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
+	store = Store()
 	form = LoginForm(request.form)
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			for log_n in range(0, len(session['storage'])):
-				if(request.form['username'] == session['storage'][log_n]['email'])\
-					and check_password_hash(
-						session['storage'][log_n]['password'], request.form['password']) is True:
-					session['logged_in'] = True
-					session['user'] = request.form['username']
-					flash('Welcome back ' + session['storage'][log_n]['username'])
-					return redirect(url_for('dashboard'))					
-			error = 'Invalid Credentials, Try Again'
-			return render_template("login.html", form=form, error=error)				
+			if store.check_login(request.form['username'], request.form['password'], 'session'):
+				session['logged_in'] = True
+				session['user'] = request.form['username']
+				flash('Welcome back ' + session['storage'][store.user_logged_in()]['username'])
+				return redirect(url_for('dashboard'))					
+				error = 'Invalid Credentials, Try Again'
+				return render_template("login.html", form=form, error=error)		
 		else:
 			return render_template("login.html", form=form, error=error)
 	return render_template("login.html", form=form, error=error)
+
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -88,73 +91,95 @@ def dashboard():
 				created_on=datetime.now()
 			)
 			new_list.save_list()
-			add_to_session(new_list.save_list())
-			flash('List created successfuly')
-			return render_template(
-				"dashboard.html",
-				form=form,
-				data=serve_list()
-			)
-		return render_template(
-			"dashboard.html",
-			form=form,
-			data=serve_list()
-		)
+			print(Store().store_session(new_list.save_list()))
+			# print(session['storage'][Store().user_logged_in()]['shoppinglists'])
 	return render_template(
 		"dashboard.html",
 		form=form,
-		data=serve_list()
+		data = session['storage'][Store().user_logged_in()]['shoppinglists']
 	)
 
-def add_to_session(session_value):
-	session['storage'][len(session['storage'])-1]['shoppinglists'].append(session_value)
-	return session['storage']
+
+# @app.route('/dashboard', methods=['GET', 'POST'])
+# @login_required
+# def dashboard():
+# 	form = ListForm(request.form)
+# 	if request.method == 'POST':
+# 		if form.validate_on_submit():
+# 			new_list = ShoppingList(
+# 				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
+# 				title=request.form['title'],
+# 				description=request.form['description'],
+# 				created_on=datetime.now()
+# 			)
+# 			new_list.save_list()
+# 			add_to_session(new_list.save_list())
+# 			flash('List created successfuly')
+# 			return render_template(
+# 				"dashboard.html",
+# 				form=form,
+# 				data=serve_list()
+# 			)
+# 		return render_template(
+# 			"dashboard.html",
+# 			form=form,
+# 			data=serve_list()
+# 		)
+# 	return render_template(
+# 		"dashboard.html",
+# 		form=form,
+# 		data=serve_list()
+# 	)
+
+# def add_to_session(session_value):
+# 	session['storage'][len(session['storage'])-1]['shoppinglists'].append(session_value)
+# 	return session['storage']
 
 
-def serve_list():
-	if session.get('storage') is not None:
-		all_lists = session['storage'][len(session['storage'])-1]['shoppinglists']
-		return all_lists
+# def serve_list():
+# 	if session.get('storage') is not None:
+# 		all_lists = session['storage'][len(session['storage'])-1]['shoppinglists']
+# 		return all_lists
 
-@app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
-@login_required
-def edit_list(list_id):
-	"""This route allows a user to change a list"""
+# @app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_list(list_id):
+# 	"""This route allows a user to change a list"""
 
-	store = Store()
-	form = EditList(request.form)
-	if request.method == 'POST':
-		if form.validate_on_submit():
-			renew_list = ShoppingList(
-				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
-				title=request.form['title'],
-				description=request.form['description'],
-				list_id=list_id,
-				created_on=request.form['hidden']
-			)
-			# print(store.shoppinglists)
-			# print(session['storage'])
-			renew_list.update_list()
-			# print(store.serve_session())
-			flash('List updated successfuly')
-			return redirect(url_for('dashboard'))	
+# 	store = Store()
+# 	form = EditList(request.form)
+# 	if request.method == 'POST':
+# 		if form.validate_on_submit():
+# 			renew_list = ShoppingList(
+# 				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
+# 				title=request.form['title'],
+# 				description=request.form['description'],
+# 				list_id=list_id,
+# 				created_on=request.form['hidden']
+# 			)
+# 			# print(store.shoppinglists)
+# 			# print(session['storage'])
+# 			renew_list.update_list()
+# 			# print(store.serve_session())
+# 			flash('List updated successfuly')
+# 			return redirect(url_for('dashboard'))	
 	
-	if store.check_list(list_id):
-		flash('You can edit your list here')
-		serve_temp = store.get_list_data(list_id)
-		return render_template(
-			"includes/edit_list.html",
-			form=form,
-			data=serve_list(),
-			form_data=serve_temp
-		)
-	flash('List could not be found')
-	return render_template(
-			"dashboard.html",
-			form=form,
-			data=serve_list(),
-			form_data=serve_list()
-		)
+# 	if store.check_list(list_id):
+# 		flash('You can edit your list here')
+# 		serve_temp = store.get_list_data(list_id)
+# 		return render_template(
+# 			"includes/edit_list.html",
+# 			form=form,
+# 			data=serve_list(),
+# 			form_data=serve_temp
+# 		)
+# 	flash('List could not be found')
+# 	return render_template(
+# 			"dashboard.html",
+# 			form=form,
+# 			data=serve_list(),
+# 			form_data=serve_list()
+# 		)
 
 
 # @app.route('/add-item/<list_id>')
@@ -180,9 +205,9 @@ def edit_list(list_id):
 # 		data=serve_list()
 # 	)
 
-@app.route('/explore')
-def explore():
-	return render_template("explore.html")
+# @app.route('/explore')
+# def explore():
+# 	return render_template("explore.html")
 
 @app.route('/logout')
 @login_required
