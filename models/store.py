@@ -60,14 +60,16 @@ class Store(object):
     def user_logged_in_index(self):
         """ Get a key index for a logged in user """
 
-        for user_n in range(0, len(self.users)-1):
+        for user_n in range(len(self.users)):
             if self.users[user_n]['email'] == session['user']:
                 return user_n
         return False
 
     def get_user_uuid(self):
+        """ Get a user uuid used as a foreign key """
+
         if 'user' in session:
-            for user_n in range(0, len(self.users)-1):
+            for user_n in range(len(self.users)):
                 if self.users[user_n]['email'] == session['user']:
                      return self.users[user_n]['user_id']
             else:
@@ -84,9 +86,6 @@ class Store(object):
                         self.users[log_n]['password'], password) is True:
                 return True
         return False
-
-    def shoppinglist_data(self, user_id):
-        pass
 
 
     def check_in_session(self, for_check, to_check):

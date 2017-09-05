@@ -30,7 +30,6 @@ def login_required(f):
 def home():
 	error = None
 	form = RegisterForm(request.form)
-	print(store.users)
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_user = User(
@@ -48,7 +47,6 @@ def home():
 				session['user'] = request.form['email']
 				session['index'] = store.user_logged_in_index()
 				session['id'] = store.get_user_uuid()
-				# print(store.get_user_uuid())
 				flash(
 					'Welcome ' + session['username']
 				)
@@ -63,7 +61,6 @@ def home():
 def login():
 	error = None
 	form = LoginForm(request.form)
-	print(store.users)
 	if request.method == 'POST':
 
 		if form.validate_on_submit():
@@ -74,7 +71,6 @@ def login():
 				session['user'] = request.form['username']
 				session['index'] = store.user_logged_in_index()
 				session['id'] = store.get_user_uuid()
-				# print(store.get_user_uuid())
 				flash('Welcome back')
 				return redirect(url_for('dashboard'))
 
@@ -92,7 +88,6 @@ def login():
 def dashboard():
 	error = None
 	form = ListForm(request.form)
-	print(store.shoppinglists)
 	if request.method == 'POST':
 		if form.validate_on_submit():					
 			get_id = session['id']
@@ -108,7 +103,8 @@ def dashboard():
 					"dashboard.html",
 					form=form,
 					data=store.shoppinglists
-				)			
+				)
+			flash("List already exists")
 			return render_template(
 				"dashboard.html",
 				form=form,
@@ -125,54 +121,6 @@ def dashboard():
 		form=form,
 		data=store.shoppinglists
 	)
-
-def serve_items():
-	"""Format data to serve them to Jinja templating"""
-
-	for acc_n in range(0, len(store.shoppinglists)):
-		if store.shoppinglists[acc_n]['owner_id'] == session['id']:
-			return store.shoppinglists[acc_n]
-	return store.shoppinglists
-# @app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_list(list_id):
-#   """This route allows a user to change a list"""
-
-#   form = EditList(request.form)
-#   if request.method == 'POST':
-#   	if form.validate_on_submit():
-#   		renew_list = ShoppingList(
-#   			owner_id=session['id'],
-#   			title=request.form['title'],
-#   			description=request.form['description'],
-#   			list_id=list_id,
-#   			created_on=request.form['hidden']
-#   		)
-#   		serve_temp = store.get_list_data(list_id)
-#   		return render_template(
-#     	"includes/edit_list.html",
-#     	form=form,
-#     	# data=serve_list(),
-#     	form_data=serve_temp
-#     	)
-#     return render_template(
-#     	"includes/edit_list.html",
-#     	form=form,
-#     	# data=serve_list(),
-#     	form_data=serve_temp
-#     	)
-#     # 	flash('List could not be found')
-#     # return render_template(
-#     #       "dashboard.html",
-#     #       form=form,
-#     #       # data=serve_list(),
-#     #       # form_data=serve_list()
-#     #   )
-#     # renew_list.update_list()
-#   		# flash('List updated successfuly')
-#   		# return redirect(url_for('dashboard'))
-#     # flash('You can edit your list here')
-#     # 
 
 @app.route('/logout')
 @login_required
