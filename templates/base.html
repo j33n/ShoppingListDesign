@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ShoppingList: Keep track of your shopping</title>
   <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}
-" rel="stylesheet">
+  " rel="stylesheet">
   <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
 </head>
 <body>
@@ -34,14 +34,14 @@
             </li>          
           </ul>
           <ul class="nav navbar-nav navbar-right">
-          {% if session['logged_in'] == True %}
+            {% if session['logged_in'] == True %}
             <li>
-            <a href="/logout">
-              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-              Logout
-            </a>
-          </li>
-          {% else %}
+              <a href="/logout">
+                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                Logout
+              </a>
+            </li>
+            {% else %}
             <li>
               <a href="/login">
                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
@@ -63,11 +63,11 @@
       <!-- Child templates -->
 
       {% block content %}{% endblock %}
-        <p class="bg-danger" width="150px" style="float: right; font-size: 15px">  
+      <p class="bg-warning" width="250px" style="float: right; font-size: 20px; margin:5px; border-radius: 2px">  
         {% for message in get_flashed_messages() %}
-          {{ message }}
+        {{ message }}
         {% endfor %}
-        </p>
+      </p>
     </div>
   </section>
   <section class="sl_footer">
@@ -76,13 +76,11 @@
       <div class="col-sm-3">Made with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> by <a href="https://jeanabayo.github.io">Jean Abayo</a></div>
     </div>
   </section>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous">    
+  <script
+src="{{url_for('static', filename='js/jquery.min.js')}}">
 </script>
 <script
-  src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
+src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
 </script>
 </body>
 </html>

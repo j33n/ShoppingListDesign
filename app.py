@@ -13,7 +13,7 @@ app = Flask(__name__)
 # Configurations
 import os
 app.config.from_object(os.environ['APP_SETTINGS'])
-
+store = Store()
 def login_required(f):
 	"""Allow some routes to be accessed when logged_in"""
 
@@ -29,8 +29,8 @@ def login_required(f):
 @app.route('/', methods=['GET', 'POST'])
 def home():
 	error = None
-	store = Store()
 	form = RegisterForm(request.form)
+	print(store.users)
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_user = User(
@@ -38,22 +38,23 @@ def home():
 				email=request.form['email'],
 				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
-			)
+			)	
 
 			# Validates user exists or is saved
-			user = new_user.save_user()
+			user = new_user.save_user()		
 			if user != False:
 				session['logged_in'] = True
+				session['username'] = request.form['username']
 				session['user'] = request.form['email']
-				# store.store_session(user)
+				session['index'] = store.user_logged_in_index()
+				session['id'] = store.get_user_uuid()
+				# print(store.get_user_uuid())
 				flash(
-					'Welcome ' + store.users
-					[store.user_logged_in()]
-					['username']
+					'Welcome ' + session['username']
 				)
 				return redirect(url_for('dashboard'))
 			else:
-				error = "User already exists"
+				flash("User already exists")
 				return redirect(url_for('home'))
 		return render_template("homepage.html", form=form, error=error)
 	return render_template("homepage.html", form=form, error=error)
@@ -61,19 +62,28 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
-	store = Store()
 	form = LoginForm(request.form)
+	print(store.users)
 	if request.method == 'POST':
+
 		if form.validate_on_submit():
+
 			if store.check_login(request.form['username'], request.form['password']):
+
 				session['logged_in'] = True
 				session['user'] = request.form['username']
-				flash('Welcome back ' + store.users[store.user_logged_in()]['username'])
-				return redirect(url_for('dashboard'))					
-				error = 'Invalid Credentials, Try Again'
-				return render_template("login.html", form=form, error=error)		
+				session['index'] = store.user_logged_in_index()
+				session['id'] = store.get_user_uuid()
+				# print(store.get_user_uuid())
+				flash('Welcome back')
+				return redirect(url_for('dashboard'))
+
+			error = 'Invalid Credentials, Try Again'
+			return render_template("login.html", form=form, error=error)
+
 		else:
 			return render_template("login.html", form=form, error=error)
+
 	return render_template("login.html", form=form, error=error)
 
 
@@ -81,167 +91,69 @@ def login():
 @login_required
 def dashboard():
 	error = None
-	store = Store()
-	print(store.users[store.user_logged_in()]['shoppinglists'])
 	form = ListForm(request.form)
+	# print(get_user_id())
+	# print(store.get_user_uuid())
+	# store.shoppinglist_data(store.users[store.user_logged_in_index()]['user_id'])
+	
 	if request.method == 'POST':
-		if form.validate_on_submit():
-			new_list = ShoppingList(
-				owner_id=store.users[store.user_logged_in()]['user_id'],
+		if form.validate_on_submit():					
+			get_id = session['id']
+			new_shopping_list = ShoppingList(
+				owner_id=get_id,
 				title=request.form['title'],
 				description=request.form['description'],
 				created_on=datetime.now()
 			)
-			new_list.save_list()
-
-			# if Store().store_session(new_list.save_list()):
-				# print(Store().store_session(new_list.save_list()))
-			flash('List created successfuly')
+			if new_shopping_list.save_list():
+				flash('List created successfuly')
+				return render_template(
+					"dashboard.html",
+					form=form
+					# data=store.users[session['index']]['shoppinglists']
+				)
+			print(store.shoppinglists)			
 			return render_template(
 				"dashboard.html",
 				form=form,
-				data=store.users[store.user_logged_in()]['shoppinglists']
+				# data=store.users[session['index']]['shoppinglists']
 			)
 		return render_template(
 			"dashboard.html",
 			form=form,
-			data=store.users[store.user_logged_in()]['shoppinglists']
-		)			
+			# data=store.users[session['index']]['shoppinglists'],
+			error=error
+		)
 	return render_template(
 		"dashboard.html",
 		form=form
 	)
-	# if Store().store_session(new_list.save_list()):
-			# 	print(Store().store_session(new_list.save_list()))
-			# 	
-			# 	
-			# else:
-			# 	print(Store().store_session(new_list.save_list()))
-			# 	flash('List already exists')
-			# 	return render_template(
-			# 		"dashboard.html",
-			# 		form=form,
-			# 		error=error,
-			# 		data=session['storage'][Store().user_logged_in()]['shoppinglists']
-			# 	)
+
+def get_user_id():
+	user_id = store.get_user_uuid()
+	return serve_items(user_id)
 
 
-# @app.route('/dashboard', methods=['GET', 'POST'])
-# @login_required
-# def dashboard():
-# 	form = ListForm(request.form)
-# 	if request.method == 'POST':
-# 		if form.validate_on_submit():
-# 			new_list = ShoppingList(
-# 				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
-# 				title=request.form['title'],
-# 				description=request.form['description'],
-# 				created_on=datetime.now()
-# 			)
-# 			new_list.save_list()
-# 			add_to_session(new_list.save_list())
-# 			flash('List created successfuly')
-# 			return render_template(
-# 				"dashboard.html",
-# 				form=form,
-# 				data=serve_list()
-# 			)
-# 		return render_template(
-# 			"dashboard.html",
-# 			form=form,
-# 			data=serve_list()
-# 		)
-# 	return render_template(
-# 		"dashboard.html",
-# 		form=form,
-# 		data=serve_list()
-# 	)
+def serve_items(list_owner):
+	"""Format data to serve them to Jinja templating"""
 
-# def add_to_session(session_value):
-# 	session['storage'][len(session['storage'])-1]['shoppinglists'].append(session_value)
-# 	return session['storage']
+	for acc_n in range(0, len(store.shoppinglists)):
+		if store.shoppinglists[acc_n]['owner_id'] == list_owner:
+			return store.shoppinglists[acc_n]
+	return list_owner
 
-
-# def serve_list():
-# 	if session.get('storage') is not None:
-# 		all_lists = session['storage'][len(session['storage'])-1]['shoppinglists']
-# 		return all_lists
-
-# @app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_list(list_id):
-# 	"""This route allows a user to change a list"""
-
-# 	store = Store()
-# 	form = EditList(request.form)
-# 	if request.method == 'POST':
-# 		if form.validate_on_submit():
-# 			renew_list = ShoppingList(
-# 				owner_id=session['storage'][len(session['storage'])-1]['user_id'],
-# 				title=request.form['title'],
-# 				description=request.form['description'],
-# 				list_id=list_id,
-# 				created_on=request.form['hidden']
-# 			)
-# 			# print(store.shoppinglists)
-# 			# print(session['storage'])
-# 			renew_list.update_list()
-# 			# print(store.serve_session())
-# 			flash('List updated successfuly')
-# 			return redirect(url_for('dashboard'))	
-	
-# 	if store.check_list(list_id):
-# 		flash('You can edit your list here')
-# 		serve_temp = store.get_list_data(list_id)
-# 		return render_template(
-# 			"includes/edit_list.html",
-# 			form=form,
-# 			data=serve_list(),
-# 			form_data=serve_temp
-# 		)
-# 	flash('List could not be found')
-# 	return render_template(
-# 			"dashboard.html",
-# 			form=form,
-# 			data=serve_list(),
-# 			form_data=serve_list()
-# 		)
-
-
-# @app.route('/add-item/<list_id>')
-# def add_item(list_id):
-# 	form = ListForm(request.form)
-# 	Store().edit_lists(list_id)
-# 	flash('This functionality is still in maintenance')
-# 	return render_template(
-# 		"dashboard.html",
-# 		form=form,
-# 		data=serve_list()
-# 	)
-
-
-# @app.route('/delete-list/<list_id>')
-# def delete_list(list_id):
-# 	form = ListForm(request.form)
-# 	Store().edit_lists(list_id)
-# 	flash('This functionality is still in maintenance')
-# 	return render_template(
-# 		"dashboard.html",
-# 		form=form,
-# 		data=serve_list()
-# 	)
-
-# @app.route('/explore')
-# def explore():
-# 	return render_template("explore.html")
 
 @app.route('/logout')
 @login_required
 def logout():
 	session.pop('logged_in', None)
-	session.pop('email', None)
+	session.pop('user', None)
+	session.pop('index', None)
+	session.pop('id', None)
+	session.pop('username', None)
 	flash('We hope you enjoyed organizing and sharing lists see you soon')
 	return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
