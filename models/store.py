@@ -25,6 +25,16 @@ class Store(object):
                 self.users.append(data)
                 return self.users
 
+    def update_data(self, data_to_update):
+        """Allow user to update his lists"""
+        if 'title' in data_to_update:
+            if self.check_exists(data_to_update['title'], 'title'):
+                cur_data = self.get_list_data(data_to_update['list_id'])
+                cur_data['title'] = data_to_update['title']
+                cur_data['description'] = data_to_update['description']
+                return self.shoppinglists
+
+
     def check_exists(self, check_in, check_for):
         """check if value already exists in storage"""
 
@@ -38,6 +48,14 @@ class Store(object):
             return "Invalid search"
         for sess_n in range(0, len(search)):
                 return bool(search[sess_n][check_for] == check_in)
+
+    def get_list_data(self, list_id):
+        """ Getting the data for a certain list """
+
+        for list_n in range(0, len(self.shoppinglists)):
+            l_data = list_id in self.shoppinglists[list_n].values()
+            if l_data is True:
+                return self.shoppinglists[list_n]
 
     def user_logged_in_index(self):
         """ Get a key index for a logged in user """
@@ -69,14 +87,6 @@ class Store(object):
 
     def shoppinglist_data(self, user_id):
         pass
-
-    def get_list_data(self, list_id):
-        """ Getting the data for a certain list """
-
-        for list_n in range(0, len(self.shoppinglists)):
-            l_data = list_id in self.shoppinglists[list_n].values()
-            if l_data is True:
-                return self.shoppinglists[list_n]
 
 
     def check_in_session(self, for_check, to_check):
