@@ -6,7 +6,7 @@ class Store(object):
     """ Storage module """
     users = []
     shoppinglists = []
-    items = []
+    shoppinglistitems = []
 
 
     def store_data(self, data):
@@ -25,15 +25,22 @@ class Store(object):
                 self.users.append(data)
                 return self.users
 
+        elif 'item_title' in data:
+            if self.check_exists(data['item_title'], 'item_title'):
+                return False
+            else:
+                self.shoppinglistitems.append(data)
+                return self.shoppinglistitems
+
     def update_data(self, data_to_update):
         """Allow user to update his shoppinglists"""
 
         if 'title' in data_to_update:
-            if self.check_exists(data_to_update['title'], 'title'):
-                cur_data = self.get_list_data(data_to_update['list_id'])
-                cur_data['title'] = data_to_update['title']
-                cur_data['description'] = data_to_update['description']
-                return data_to_update['title']
+            # if self.check_exists(data_to_update['title'], 'title'):
+            cur_data = self.get_list_data(data_to_update['list_id'])
+            cur_data['title'] = data_to_update['title']
+            cur_data['description'] = data_to_update['description']
+            return cur_data
 
     def delete_data(self, type_of_delete, to_delete):
         """Allow a user to delete shopping lists and items"""
@@ -46,25 +53,27 @@ class Store(object):
             return False
 
         elif type_of_delete == "shoppingitem":
-            return "Fucked"
+            return "Delete item on shoppinglist"
 
         else:
             return "We could not find what you are trying to delete"
 
 
     def check_exists(self, check_in, check_for):
-        """Check if value already exists in storage"""
+        """Check if user, shopping list or item already exist in storage"""
 
         if check_for == 'email':
              search = self.users
         elif check_for == 'title':
             search = self.shoppinglists
         elif check_for == 'item_title':
-            search = self.items
+            search = self.shoppinglistitems
         else:
             return "Invalid search"
         for sess_n in range(len(search)):
-                return bool(search[sess_n][check_for] == check_in)
+            if search[sess_n][check_for] == check_in:
+                return True
+        return False
 
     def get_list_data(self, list_id):
         """Getting the data for a certain shopping list"""
@@ -73,6 +82,14 @@ class Store(object):
             l_data = list_id in self.shoppinglists[list_n].values()
             if l_data is True:
                 return self.shoppinglists[list_n]
+
+    # def get_item_data(self, item_id):
+    #     """Getting the data for a certain shopping list"""
+
+    #     for item_n in range(len(self.shoppinglistitems)):
+    #         item_data = item_id in self.shoppinglistitems[item_n].values()
+    #         if item_data is True:
+    #             return self.shoppinglistitems[item_n]
 
     def user_logged_in_index(self):
         """Get a key index for a logged in user"""

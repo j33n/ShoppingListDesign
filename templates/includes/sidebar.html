@@ -1,8 +1,12 @@
 <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
   <div class="sl_item_title">
-    <h2>My Lists</h2>          
+    <h2>My Shopping Lists</h2>          
   </div>
-  <div class="row sl_item_row">            
+  <div class="row sl_item_row">
+    {% if data == []%}
+    <h3 style="color:#fff">Your shopping list is empty for now</h3>
+    <h5 style="color:#fff"><<<<--- Add item here</h5>
+    {% endif%}            
     {% for dict_item in data %}
 
     <div class="panel panel-success">       
@@ -13,17 +17,25 @@
       <div class="panel-footer" style="margin-bottom: .3em"> 
         <div class="btn-group" role="group" aria-label="Basic example">
           <a href="/edit-list/{{ dict_item['list_id'] }}">
-            <button type="button" class="btn btn-success">Edit</button>
+            <button type="button" class="btn btn-success btn-xs">Edit</button>
           </a>
           <a href="/add-item/{{ dict_item['list_id'] }}"> 
-            <button type="button" class="btn btn-warning">Add Items</button>
+            <button type="button" class="btn btn-warning btn-xs">Add Items</button>
           </a>
           <a href="/delete-list/{{ dict_item['list_id'] }}">
-            <button type="button" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-danger btn-xs">Delete</button>
           </a>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown">View Items <span class="caret"></span></button>
         </div>      
       </div>                                 
-    </div>      
+    </div>
+    <div class="list-group">
+    {% for dict_item in data_item %}
+      <a href="#" class="list-group-item">heey</a>
+    </div>
+      {% endfor %}
     {% endfor %}
   </div>
 </div>

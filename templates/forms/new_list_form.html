@@ -1,34 +1,42 @@
-<form class="form-horizontal" role="form" action="" method="post">
-  {{ form.csrf_token }}
-  <div class="input-group" style="width:300px; margin-bottom:10px;">
-    {{ form.title(placeholder="Your list title ...", class="form-control") }}    
-  </div>
-  <span class="error">
+<div class="row">
+  <h1>
+    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+    Add a new List
+  </h1>
+</div>
+<div class="row new_list">
+  <form class="form-horizontal" role="form" action="" method="post">
+    {{ form.csrf_token }}
+    <div class="input-group" style="width:300px; margin-bottom:10px;">
+      {{ form.title(placeholder="Your list title ...", class="form-control") }}    
+    </div>
+    <span class="error">
       {% if form.title.errors %}
         {% for error in form.title.errors %}
           {{error}}
         {% endfor %}
       {% endif %}
     </span>
-  <div class="input-group" style="width:300px; margin-bottom:10px;">    
-    {{ form.description(placeholder="description", class="form-control") }}        
-  </div>
-  <span class="warning">
+    <div class="input-group" style="width:300px; margin-bottom:10px;">    
+      {{ form.description(placeholder="description", class="form-control") }}        
+    </div>
+    <span class="warning">
       {% if form.description.errors %}
         {% for error in form.description.errors %}
           {{error}}
         {% endfor %}
       {% endif %}
-  </span>
-  {% if error %}
+    </span>
+    {% if error %}
     <p class="error" style="color:red">
       <strong>Error: </strong>
-        {{ error }}
+      {{ error }}
     </p>
-  {% endif %}          
-  <div class="form-group last">
-    <div class="col-sm-12">
-      <button type="submit" class="btn btn-success btn-sm">Create List</button>
-    </div>
-  </div>                  
-</form>
+    {% endif %}          
+    <div class="form-group last">
+      <div class="col-sm-12">
+        <button type="submit" class="btn btn-success btn-sm">Create List</button>
+      </div>
+    </div>                  
+  </form>
+</div>

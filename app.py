@@ -1,12 +1,14 @@
-# """ module for the routes and views """
+"""All routes and their actions"""
+
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
 from models.user import User
 from models.store import Store
 from models.shoppinglist import ShoppingList
+from models.shoppinglistitem import ShoppingListItem
 from werkzeug.security import generate_password_hash
 from datetime import datetime
-from forms import RegisterForm, LoginForm, ListForm, EditList
+from forms import RegisterForm, LoginForm, ListForm, EditList, ItemForm
 
 app = Flask(__name__)
 
@@ -120,18 +122,21 @@ def dashboard():
 				return render_template(
 					"dashboard.html",
 					form=form,
+					data_item=store.shoppinglistitems,
 					data=store.shoppinglists
 				)
 			flash("List already exists")
 			return render_template(
 				"dashboard.html",
 				form=form,
-				data=store.shoppinglists
+				data=store.shoppinglists,
+				data_item=store.shoppinglistitems
 			)
 		return render_template(
 			"dashboard.html",
 			form=form,
 			data=store.shoppinglists,
+			data_item=store.shoppinglistitems,
 			error=error
 		)
 	return render_template(
@@ -156,6 +161,7 @@ def edit_list(list_id):
   			list_id=list_id,
   			created_on=request.form['hidden']
   		)
+  		print(request.form['title'])
   		renew_list.update_list()
   		flash('List updated successfuly')
   		return redirect(url_for('dashboard'))
@@ -164,6 +170,7 @@ def edit_list(list_id):
   	"includes/edit_list.html",
   	form=form,
   	data=store.shoppinglists,
+  	data_item=store.shoppinglistitems,
   	form_data=serve_temp
   	)
 
@@ -178,12 +185,55 @@ def delete_list(list_id):
 	flash("Shopping list could not be found")
 	return redirect(url_for('dashboard'))
 
+@app.route('/add-item/<list_id>', methods=['GET', 'POST'])
+@login_required
+def add_shopping_item(list_id):
+	"""Allow a user to add an item to a shopping list"""
+
+	form = ItemForm(request.form)
+	error = None
+	serve_shoppinglist = store.get_list_data(list_id)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			new_sl_item = ShoppingListItem(
+				item_title=request.form['item_title'],
+				item_description=request.form['item_description'],
+				shoppinglist_id=list_id,
+				created_on=datetime.now()
+			)
+
+			# Save the item to a shopping list relevant
+			save_item = new_sl_item.save_sl_item()
+			print(save_item)
+			if save_item != False:
+				flash("Item added successfuly")
+				print(store.shoppinglistitems)
+				return redirect(url_for('dashboard'))
+			else:
+				flash("Item already exists")
+				print(store.shoppinglistitems)
+				return redirect(url_for('dashboard'))
+		return render_template(
+		"dashboard.html",
+		form=form,
+		shoppinglistdata=serve_shoppinglist,
+		to_load='add-item',
+		data=store.shoppinglists
+	)
+	return render_template(
+		"dashboard.html",
+		form=form,
+		shoppinglistdata=serve_shoppinglist,
+		to_load='add-item',
+		data=store.shoppinglists
+	)
+
 
 @app.route('/logout')
 @login_required
 def logout():
 	"""Ensure a logged in user can logout of his account"""
-	
+
 	session.pop('logged_in', None)
 	session.pop('user', None)
 	session.pop('index', None)

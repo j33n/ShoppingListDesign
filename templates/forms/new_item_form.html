@@ -1,0 +1,74 @@
+<style>
+#to_add_on{
+  background-color: #f3e7e0;
+  width: 50%;
+  font-size: 150%;
+  padding: 5px;
+  padding-left: 2em;
+  margin-left: 2em;
+}
+.new_item{
+  width: 50%;
+  margin-left: 6em;
+}
+.new_item .input-group{
+   width:88%;
+}
+.new_item .input-group .form-control{
+  border: none;
+}
+.new_item .last{
+  margin-top: 1em;
+  padding-left: 2em
+}
+.new_item .btn{
+  border-radius: 1em;
+  width: 50%;
+  font-size: 100%
+}
+</style>
+<div class="row" id="to_add_on">
+  <span>
+  {% for key, value in shoppinglistdata.items() %}
+  {% if key == 'title' %}  
+      {{ value }}
+    {%endif%}
+  {% endfor %}
+  </span>
+</div>
+<div class="row new_item">
+  <form class="form-horizontal" role="form" action="" method="post">
+    {{ form.csrf_token }}
+    <div class="input-group">
+      {{ form.item_title(placeholder="Item Title here...", class="form-control") }}    
+    </div>
+    <span class="error">
+      {% if form.item_title.errors %}
+        {% for error in form.item_title.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+    </span>
+    <div class="input-group">    
+      {{ form.item_description(placeholder="Item description here... (Optional)", class="form-control") }}        
+    </div>
+    <span class="warning">
+      {% if form.item_description.errors %}
+        {% for error in item_description.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+    </span>
+    {% if error %}
+    <p class="error" style="color:red">
+      <strong>Error: </strong>
+      {{ error }}
+    </p>
+    {% endif %}          
+    <div class="form-group last">
+      <div class="col-sm-12">
+        <button type="submit" class="btn btn-success btn-sm">Add Item</button>
+      </div>
+    </div>                  
+  </form>
+</div>
