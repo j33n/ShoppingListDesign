@@ -36,6 +36,6 @@ class ShoppingList(object):
     def update_list(self):
         """Update a list"""
 
-        return Store().update_data(self.list_data())
+        print(Store().update_data(self.list_data()))
 
         

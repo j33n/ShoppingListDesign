@@ -30,6 +30,7 @@ def login_required(f):
 def home():
 	error = None
 	form = RegisterForm(request.form)
+	print(store.users)
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			new_user = User(
@@ -47,9 +48,13 @@ def home():
 				session['user'] = request.form['email']
 				session['index'] = store.user_logged_in_index()
 				session['id'] = store.get_user_uuid()
+				# print(store.get_user_uuid())
 				flash(
 					'Welcome ' + session['username']
 				)
+				print(store.users)
+				print(session['index'])
+				print(session['id'])
 				return redirect(url_for('dashboard'))
 			else:
 				flash("User already exists")
@@ -61,6 +66,7 @@ def home():
 def login():
 	error = None
 	form = LoginForm(request.form)
+	print(store.users)
 	if request.method == 'POST':
 
 		if form.validate_on_submit():
@@ -71,6 +77,7 @@ def login():
 				session['user'] = request.form['username']
 				session['index'] = store.user_logged_in_index()
 				session['id'] = store.get_user_uuid()
+				# print(store.get_user_uuid())
 				flash('Welcome back')
 				return redirect(url_for('dashboard'))
 
@@ -88,6 +95,7 @@ def login():
 def dashboard():
 	error = None
 	form = ListForm(request.form)
+	print(store.shoppinglists)
 	if request.method == 'POST':
 		if form.validate_on_submit():					
 			get_id = session['id']
@@ -97,6 +105,8 @@ def dashboard():
 				description=request.form['description'],
 				created_on=datetime.now()
 			)
+			print(session['index'])
+			print(session['id'])
 			if new_shopping_list.save_list():
 				flash('List created successfuly')
 				return render_template(
@@ -121,6 +131,42 @@ def dashboard():
 		form=form,
 		data=store.shoppinglists
 	)
+@app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
+@login_required
+def edit_list(list_id):
+  """This route allows a user to change a list"""
+# Title not updating
+  form = EditList(request.form)
+  serve_temp = store.get_list_data(list_id)
+  if request.method == 'POST':
+  	if form.validate_on_submit():
+  		renew_list = ShoppingList(
+  			owner_id=session['id'],
+  			title=request.form['title'],
+  			description=request.form['description'],
+  			list_id=list_id,
+  			created_on=request.form['hidden']
+  		)
+  		renew_list.update_list()
+  		flash('List updated successfuly')
+  		return redirect(url_for('dashboard'))
+  	
+  return render_template(
+  	"includes/edit_list.html",
+  	form=form,
+  	data=store.shoppinglists,
+  	form_data=serve_temp
+  	)
+
+@app.route('/delete-list/<list_id>')
+@login_required
+def delete_list(list_id):
+	if store.delete_data('shoppinglist', list_id):
+		flash("Shopping list deleted succesfully")
+		return redirect(url_for('dashboard'))
+	flash("Shopping list could not be found")
+	return redirect(url_for('dashboard'))
+
 
 @app.route('/logout')
 @login_required

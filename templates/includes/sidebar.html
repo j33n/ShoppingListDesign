@@ -12,13 +12,13 @@
       <div class="panel-body"> {{ dict_item['description'] }} </div>
       <div class="panel-footer" style="margin-bottom: .3em"> 
         <div class="btn-group" role="group" aria-label="Basic example">
-          <a href="/edit-list/{{ dict_item['owner_id'] }}">
+          <a href="/edit-list/{{ dict_item['list_id'] }}">
             <button type="button" class="btn btn-success">Edit</button>
           </a>
-          <a href="/add-item/{{ dict_item['owner_id'] }}"> 
+          <a href="/add-item/{{ dict_item['list_id'] }}"> 
             <button type="button" class="btn btn-warning">Add Items</button>
           </a>
-          <a href="/delete-list/{{ dict_item['owner_id'] }}">
+          <a href="/delete-list/{{ dict_item['list_id'] }}">
             <button type="button" class="btn btn-danger">Delete</button>
           </a>
         </div>      
