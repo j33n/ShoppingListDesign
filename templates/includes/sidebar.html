@@ -27,15 +27,13 @@
           </a>
         </div>
         <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown">View Items <span class="caret"></span></button>
+          <a href="/shoppinglists_items/{{ dict_item['list_id'] }}">
+          <button type="button" class="btn btn-info btn-xs">View Items <span class="caret"></span>
+            </button>
+          </a>
         </div>      
       </div>                                 
     </div>
-    <div class="list-group">
-    {% for dict_item in data_item %}
-      <a href="#" class="list-group-item">heey</a>
-    </div>
-      {% endfor %}
     {% endfor %}
   </div>
 </div>

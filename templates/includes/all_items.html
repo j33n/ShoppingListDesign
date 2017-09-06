@@ -1,0 +1,45 @@
+<div class="col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
+  <div class="sl_item_title">          
+  </div>
+  {% if data == []%}
+  <h3 style="color:#fff">No item yet</h3>
+  {%else%}  
+  <div class="panel panel-default">
+    <div class="panel-heading">{{shoppinglistdata.title}}</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Description</th>
+          <th>Created On</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for my_item in data %}
+        <tr>          
+          <th scope="row">{{my_item.item_title}}</th>          
+          <td>{{my_item.item_description}}</td>
+          <td>{{my_item.created_on}}</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="btn btn-default" aria-label="Center Align">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="btn btn-default" aria-label="Right Align">
+                <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+              </button>
+            </div>
+          </td>
+          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  {% endif%}
+</div>

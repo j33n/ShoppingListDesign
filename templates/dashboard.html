@@ -11,6 +11,8 @@
   {% include 'includes/add_item.html' %}
   {% elif to_load == 'add-item' %}
   {% include 'forms/new_item_form.html' %}
+  {% elif to_load == 'all-items' %}
+  {% include 'includes/all_items.html' %}
   {% else %}
     {% include 'forms/new_list_form.html' %}
   {% endif %}

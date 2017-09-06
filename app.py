@@ -44,7 +44,7 @@ def home():
 				email=request.form['email'],
 				password=generate_password_hash(request.form['password']),
 				created_on=datetime.now()
-			)	
+			)
 
 			# Validates user exists or is saved
 			user = new_user.save_user()		
@@ -105,7 +105,7 @@ def dashboard():
 
 	error = None
 	form = ListForm(request.form)
-	print(store.shoppinglists)
+	print(store.shoppinglistitems)
 	if request.method == 'POST':
 		if form.validate_on_submit():					
 			get_id = session['id']
@@ -142,7 +142,8 @@ def dashboard():
 	return render_template(
 		"dashboard.html",
 		form=form,
-		data=store.shoppinglists
+		data=store.shoppinglists,
+		data_item=store.shoppinglistitems,
 	)
 @app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
 @login_required
@@ -226,6 +227,18 @@ def add_shopping_item(list_id):
 		shoppinglistdata=serve_shoppinglist,
 		to_load='add-item',
 		data=store.shoppinglists
+	)
+
+@app.route('/shoppinglists_items/<list_id>', methods=['GET', 'POST'])
+@login_required
+def get_shoppinglist_item(list_id):
+	"""Allow a user to view all items on a shopping list"""
+	serve_shoppinglist = store.get_list_data(list_id)
+	return render_template(
+		"dashboard.html",
+		shoppinglistdata=serve_shoppinglist,
+		to_load='all-items',
+		data=store.shoppinglistitems
 	)
 
 
