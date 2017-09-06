@@ -12,7 +12,7 @@ class Store(object):
     def store_data(self, data):
         """Adding users, shopping lists and items"""
 
-        if 'title' in data:
+        if 'title' in data: 
             if self.check_exists(data['title'], 'title'):
                 return False
             else:
@@ -53,7 +53,7 @@ class Store(object):
 
 
     def check_exists(self, check_in, check_for):
-        """check if value already exists in storage"""
+        """Check if value already exists in storage"""
 
         if check_for == 'email':
              search = self.users
@@ -67,7 +67,7 @@ class Store(object):
                 return bool(search[sess_n][check_for] == check_in)
 
     def get_list_data(self, list_id):
-        """ Getting the data for a certain list """
+        """Getting the data for a certain shopping list"""
 
         for list_n in range(len(self.shoppinglists)):
             l_data = list_id in self.shoppinglists[list_n].values()
@@ -75,7 +75,7 @@ class Store(object):
                 return self.shoppinglists[list_n]
 
     def user_logged_in_index(self):
-        """ Get a key index for a logged in user """
+        """Get a key index for a logged in user"""
 
         for user_n in range(len(self.users)):
             if self.users[user_n]['email'] == session['user']:
@@ -83,7 +83,7 @@ class Store(object):
         return False
 
     def get_user_uuid(self):
-        """ Get a user uuid used as a foreign key """
+        """ Get a user uuid to be used as a foreign key """
 
         if 'user' in session:
             for user_n in range(len(self.users)):
@@ -96,31 +96,10 @@ class Store(object):
 
 
     def check_login(self, email, password):
-        """Check if login credentials are valid"""
+        """Check if login credentials are matching with what we have"""
 
         for log_n in range(len(self.users)):
             if email == self.users[log_n]['email'] and check_password_hash(
                         self.users[log_n]['password'], password) is True:
                 return True
         return False
-
-    def shoppinglist_data(self, user_id):
-        pass
-
-
-    def check_in_session(self, for_check, to_check):
-        """Check if a user exists in session"""
-
-        if for_check == 'email':
-            for sess_item in range(len(self.users)):
-                if self.users[sess_item][to_check[0]] == to_check[1]:
-                    return True
-            return False
-
-        elif for_check == 'title':
-            for l_item in range(0, len(self.users[self.user_logged_in_index()]['shoppinglists'])):
-                if self.users[self.user_logged_in_index()]['shoppinglists'][l_item][to_check[0]] == to_check[1]:
-                    return True
-            return False
-        else:
-            return "Invalid search"

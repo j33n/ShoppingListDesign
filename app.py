@@ -10,12 +10,14 @@ from forms import RegisterForm, LoginForm, ListForm, EditList
 
 app = Flask(__name__)
 
-# Configurations
+"""Configurations"""
 import os
 app.config.from_object(os.environ['APP_SETTINGS'])
+
 store = Store()
+
 def login_required(f):
-	"""Allow some routes to be accessed when logged_in"""
+	"""Allow some routes to be accessed only when logged_in"""
 
 	@wraps(f)
 	def wrap(*args, **kwargs):
@@ -28,6 +30,8 @@ def login_required(f):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+	"""Render the homepage and Ensure a user can create an account"""
+
 	error = None
 	form = RegisterForm(request.form)
 	print(store.users)
@@ -64,6 +68,8 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	"""Render the login page and Ensure users can login"""
+
 	error = None
 	form = LoginForm(request.form)
 	print(store.users)
@@ -93,6 +99,8 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+	"""Renders the dashboard and ensure a user can create his first shopping list"""
+
 	error = None
 	form = ListForm(request.form)
 	print(store.shoppinglists)
@@ -134,7 +142,8 @@ def dashboard():
 @app.route('/edit-list/<list_id>', methods=['GET', 'POST'])
 @login_required
 def edit_list(list_id):
-  """This route allows a user to change a list"""
+  """Allow a user to change a shopping list of his choice"""
+
 # Title not updating
   form = EditList(request.form)
   serve_temp = store.get_list_data(list_id)
@@ -161,6 +170,8 @@ def edit_list(list_id):
 @app.route('/delete-list/<list_id>')
 @login_required
 def delete_list(list_id):
+	"""Allow a user to delete a list of his choice"""
+
 	if store.delete_data('shoppinglist', list_id):
 		flash("Shopping list deleted succesfully")
 		return redirect(url_for('dashboard'))
@@ -171,6 +182,8 @@ def delete_list(list_id):
 @app.route('/logout')
 @login_required
 def logout():
+	"""Ensure a logged in user can logout of his account"""
+	
 	session.pop('logged_in', None)
 	session.pop('user', None)
 	session.pop('index', None)
