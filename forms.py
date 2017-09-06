@@ -35,8 +35,9 @@ class ListForm(FlaskForm):
     description = TextAreaField('Content', validators=[DataRequired(), Length(max=225)])
 
 class ItemForm(FlaskForm):
-    item_title = TextField('Item_Title', validators=[Length(min=8, max=100)])
-    item_description = TextAreaField('Item_Description', validators=[DataRequired(), Length(max=225)])
+    item_title = TextField('Item_Title', validators=[DataRequired(), Length(min=8, max=100)])
+    item_description = TextAreaField('Item_Description', validators=[Length(max=225)])
+    item_created_on = HiddenField('Created_On')
 
 class EditList(FlaskForm):
     title = TextField('Title', validators=[DataRequired(), Length(min=8, max=100)])

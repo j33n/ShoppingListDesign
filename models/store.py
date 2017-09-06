@@ -37,10 +37,16 @@ class Store(object):
 
         if 'title' in data_to_update:
             # if self.check_exists(data_to_update['title'], 'title'):
-            cur_data = self.get_list_data(data_to_update['list_id'])
-            cur_data['title'] = data_to_update['title']
-            cur_data['description'] = data_to_update['description']
-            return cur_data
+            shoppinglist_data = self.get_list_data(data_to_update['list_id'])
+            shoppinglist_data['title'] = data_to_update['title']
+            shoppinglist_data['description'] = data_to_update['description']
+            return shoppinglist_data
+
+        else:
+            shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
+            shoppinglistitem_data['item_title'] = data_to_update['item_title']
+            shoppinglistitem_data['item_description'] = data_to_update['item_description']
+            return shoppinglistitem_data
 
     def delete_data(self, type_of_delete, to_delete):
         """Allow a user to delete shopping lists and items"""
@@ -83,13 +89,14 @@ class Store(object):
             if l_data is True:
                 return self.shoppinglists[list_n]
 
-    # def get_item_data(self, item_id):
-    #     """Getting the data for a certain shopping list"""
+    def get_item_data(self, item_id):
+        """Getting the data for a certain shopping item in a shopping list"""
 
-    #     for item_n in range(len(self.shoppinglistitems)):
-    #         item_data = item_id in self.shoppinglistitems[item_n].values()
-    #         if item_data is True:
-    #             return self.shoppinglistitems[item_n]
+        for item_n in range(len(self.shoppinglistitems)):
+            item_data = item_id in self.shoppinglistitems[item_n].values()
+            if item_data is True:
+                return self.shoppinglistitems[item_n]
+        return False
 
     def user_logged_in_index(self):
         """Get a key index for a logged in user"""

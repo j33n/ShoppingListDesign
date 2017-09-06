@@ -233,12 +233,66 @@ def add_shopping_item(list_id):
 @login_required
 def get_shoppinglist_item(list_id):
 	"""Allow a user to view all items on a shopping list"""
+
 	serve_shoppinglist = store.get_list_data(list_id)
 	return render_template(
 		"dashboard.html",
+		form=ItemForm(request.form),
 		shoppinglistdata=serve_shoppinglist,
 		to_load='all-items',
-		data=store.shoppinglistitems
+		shoppinglistitems=store.shoppinglistitems,
+		data=store.shoppinglists
+	)
+
+
+@app.route('/update-shoppinglistitem/<item_id>', methods=['GET', 'POST'])
+@login_required
+def update_shoppinglist_item(item_id):
+	"""Allow a user to view all items on a shopping list"""
+	
+	form = ItemForm(request.form)
+	serve_shoppinglistitem = store.get_item_data(item_id)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			renew_shoppinglistitem = ShoppingListItem(
+				shoppinglist_id=serve_shoppinglistitem['shoppinglist_id'],
+				item_title=request.form['item_title'],
+				item_description=request.form['item_description'],
+				item_id=item_id,
+				created_on=request.form['item_created_on']
+			)
+			renew_shoppinglistitem.update_shoppinglist_item()
+			flash('Item on list updated successfuly')
+			return render_template(
+				"dashboard.html",
+				form=form,
+				shoppinglistdata=store.get_list_data(
+					serve_shoppinglistitem['shoppinglist_id']
+					),
+				to_load='all-items',
+				data=store.shoppinglists,
+				shoppinglistitems=store.shoppinglistitems
+			)
+		flash("Invalid data to update Item")
+		return render_template(
+			"dashboard.html",
+			form=form,
+			shoppinglistdata=store.get_list_data(
+				serve_shoppinglistitem['shoppinglist_id']
+			),
+			to_load='all-items',
+			data=store.shoppinglists,
+			shoppinglistitems=store.shoppinglistitems
+		)
+	return render_template(
+		"dashboard.html",
+		form=form,
+		shoppinglistdata=store.get_list_data(
+			serve_shoppinglistitem['shoppinglist_id']
+		),
+		to_load='all-items',
+		data=store.shoppinglists,
+		shoppinglistitems=store.shoppinglistitems
 	)
 
 

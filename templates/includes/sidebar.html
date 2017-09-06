@@ -4,8 +4,8 @@
   </div>
   <div class="row sl_item_row">
     {% if data == []%}
-    <h3 style="color:#fff">Your shopping list is empty for now</h3>
-    <h5 style="color:#fff"><<<<--- Add item here</h5>
+    <h3 style="color:#fff">Your shopping lists are empty for now</h3>
+    <h5 style="color:#fff"><<<<--- Start adding shopping lists here</h5>
     {% endif%}            
     {% for dict_item in data %}
 
@@ -28,8 +28,7 @@
         </div>
         <div class="btn-group" role="group" aria-label="Basic example">
           <a href="/shoppinglists_items/{{ dict_item['list_id'] }}">
-          <button type="button" class="btn btn-info btn-xs">View Items <span class="caret"></span>
-            </button>
+            <button type="button" class="btn btn-info btn-xs">View Items</button>
           </a>
         </div>      
       </div>                                 

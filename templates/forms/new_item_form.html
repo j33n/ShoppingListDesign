@@ -54,7 +54,7 @@
     </div>
     <span class="warning">
       {% if form.item_description.errors %}
-        {% for error in item_description.errors %}
+        {% for error in form.item_description.errors %}
           {{error}}
         {% endfor %}
       {% endif %}

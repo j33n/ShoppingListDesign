@@ -31,7 +31,7 @@ class ShoppingListItem(object):
 
         return Store().store_data(self.item_data())
 
-    def update_sl_item(self):
+    def update_shoppinglist_item(self):
         """Update an item on the shopping list"""
 
         return Store().update_data(self.item_data())

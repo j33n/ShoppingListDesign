@@ -1,10 +1,10 @@
 <div class="col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
   <div class="sl_item_title">          
   </div>
-  {% if data == []%}
-  <h3 style="color:#fff">No item yet</h3>
+  {% if shoppinglistitems == []%}
+  <h4>No item yet</h4>
   {%else%}  
-  <div class="panel panel-default">
+  <div class="panel panel-default" style="margin-top: 1em">
     <div class="panel-heading">{{shoppinglistdata.title}}</div>
     <table class="table">
       <thead>
@@ -12,18 +12,27 @@
           <th>Item Name</th>
           <th>Description</th>
           <th>Created On</th>
-          <th>Action</th>
+          <th>Action</th> 
         </tr>
       </thead>
       <tbody>
-        {% for my_item in data %}
+        {% for my_item in shoppinglistitems %}
         <tr>          
           <th scope="row">{{my_item.item_title}}</th>          
           <td>{{my_item.item_description}}</td>
           <td>{{my_item.created_on}}</td>
           <td>
+
+            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" style="margin-top: 10em;">
+                <div class="modal-content" style=" padding: 2em">
+                  {% include 'forms/edit_item_form.html' %}
+                </div>
+              </div>
+            </div>
+
             <div class="btn-group">
-              <button type="button" class="btn btn-default" aria-label="Left Align">
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target=".bd-example-modal-sm" aria-label="Left Align">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
               </button>
               <button type="button" class="btn btn-default" aria-label="Center Align">
@@ -33,13 +42,11 @@
                 <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
               </button>
             </div>
-          </td>
-          
+          </td>          
         </tr>
         {% endfor %}
       </tbody>
     </table>
-  </div>
-  
+  </div>  
   {% endif%}
 </div>
