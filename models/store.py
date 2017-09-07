@@ -12,25 +12,22 @@ class Store(object):
     def store_data(self, data):
         """Adding users, shopping lists and items"""
 
-        if 'title' in data: 
+        if "title" in data: 
             if self.check_exists(data['title'], 'title'):
                 return False
-            else:
-                self.shoppinglists.append(data)
-                return True
+            self.shoppinglists.append(data)
+            return True
         elif 'email' in data:
             if self.check_exists(data['email'], 'email'):
                 return False
-            else:
-                self.users.append(data)
-                return self.users
+            self.users.append(data)
+            return self.users
 
         elif 'item_title' in data:
             if self.check_exists(data['item_title'], 'item_title'):
                 return False
-            else:
-                self.shoppinglistitems.append(data)
-                return self.shoppinglistitems
+            self.shoppinglistitems.append(data)
+            return self.shoppinglistitems
 
     def update_data(self, data_to_update):
         """Allow user to update his shoppinglists"""
@@ -41,12 +38,10 @@ class Store(object):
             shoppinglist_data['title'] = data_to_update['title']
             shoppinglist_data['description'] = data_to_update['description']
             return shoppinglist_data
-
-        else:
-            shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
-            shoppinglistitem_data['item_title'] = data_to_update['item_title']
-            shoppinglistitem_data['item_description'] = data_to_update['item_description']
-            return shoppinglistitem_data
+        shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
+        shoppinglistitem_data['item_title'] = data_to_update['item_title']
+        shoppinglistitem_data['item_description'] = data_to_update['item_description']
+        return shoppinglistitem_data
 
     def delete_data(self, type_of_delete, to_delete):
         """Allow a user to delete shopping lists and items"""
@@ -64,16 +59,14 @@ class Store(object):
                     del self.shoppinglistitems[shoppinglistitem_n]
                     return True
             return False
-
-        else:
-            return "We could not find what you are trying to delete"
+        return "We could not find what you are trying to delete"
 
 
     def check_exists(self, check_in, check_for):
         """Check if user, shopping list or item already exist in storage"""
 
         if check_for == 'email':
-             search = self.users
+            search = self.users
         elif check_for == 'title':
             search = self.shoppinglists
         elif check_for == 'item_title':
@@ -116,11 +109,9 @@ class Store(object):
         if 'user' in session:
             for user_n in range(len(self.users)):
                 if self.users[user_n]['email'] == session['user']:
-                     return self.users[user_n]['user_id']
-            else:
-                return False
-        else:
-            return "A session 'user' value is missing"
+                    return self.users[user_n]['user_id']
+            return False
+        return "A session 'user' value is missing"
 
 
     def check_login(self, email, password):
