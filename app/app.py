@@ -48,17 +48,20 @@ def home():
                 created_on=datetime.now()
             )
             # Validates user exists or is saved
-            user = new_user.save_user()
-            if user != False:
-                session['logged_in'] = True
-                session['username'] = request.form['username']
-                session['user'] = request.form['email']
-                session['index'] = store.user_logged_in_index()
-                session['id'] = store.get_user_uuid()
+            if 'id' not in session:
+                user = new_user.save_user()
+                if user != False:
+                    session['logged_in'] = True
+                    session['username'] = request.form['username']
+                    session['user'] = request.form['email']
+                    session['index'] = store.user_logged_in_index()
+                    session['id'] = store.get_user_uuid()
 
-                flash('Welcome ' + session['username'])
-                return redirect(url_for('dashboard'))
-            flash("User already exists")
+                    flash('Welcome ' + session['username'])
+                    return redirect(url_for('dashboard'))
+                flash("User already exists")
+                return render_template("homepage.html", form=form, error=error)
+            flash("Another account already in service")
             return render_template("homepage.html", form=form, error=error)
         return render_template("homepage.html", form=form, error=error)
     return render_template("homepage.html", form=form, error=error)
@@ -106,7 +109,8 @@ def dashboard():
 
     error = None
     form = ListForm(request.form)
-    print(store.get_user_lists(session['id']))
+    print(session['id'])
+    print(store.get_user_lists())
     if request.method == 'POST':
         if form.validate_on_submit():
             get_id = session['id']
@@ -141,7 +145,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         form=form,
-        data=store.get_user_lists(session['id']),
+        data=store.get_user_lists(),
         data_item=store.shoppinglistitems,
     )
 
