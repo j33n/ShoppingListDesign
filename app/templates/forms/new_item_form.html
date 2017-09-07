@@ -52,7 +52,7 @@
     <div class="input-group">    
       {{ form.item_description(placeholder="Item description here... (Optional)", class="form-control") }}        
     </div>
-    <span class="warning" style="color: #fff; font-weight: bold;">
+    <span class="error" style="color: #fff; font-weight: bold;">
       {% if form.item_description.errors %}
         {% for error in form.item_description.errors %}
           {{error}}
