@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: waitress-serve --threads=10 --port=$PORT manage:app
