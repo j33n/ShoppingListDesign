@@ -9,6 +9,9 @@ install:
 
 # command to run tests.py
 script: 
-  - nosetests tests.py
-  - coverage run tests.py
+  - nosetests -v
+  - nosetests --with-coverage --cover-inclusive --cover-package=app/tests
   - coveralls
+
+after_sucess:
+  - "coveralls"

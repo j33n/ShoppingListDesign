@@ -1,6 +1,6 @@
 """ main module for user shopping list item """
 import uuid
-from models.store import Store
+from app.models.store import Store
 
 class ShoppingListItem(object):
     """main model class of the a shopping list item"""

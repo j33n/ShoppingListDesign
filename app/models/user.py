@@ -1,6 +1,6 @@
 """ main module for the user """
 import uuid
-from models.store import Store
+from app.models.store import Store
 
 class User(object):
     """main model class of the user"""
