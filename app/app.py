@@ -47,7 +47,6 @@ def home():
                 password=generate_password_hash(request.form['password']),
                 created_on=datetime.now()
             )
-
             # Validates user exists or is saved
             user = new_user.save_user()
             if user != False:
@@ -57,12 +56,10 @@ def home():
                 session['index'] = store.user_logged_in_index()
                 session['id'] = store.get_user_uuid()
 
-                flash(
-                    'Welcome ' + session['username']
-                )
+                flash('Welcome ' + session['username'])
                 return redirect(url_for('dashboard'))
             flash("User already exists")
-            return redirect(url_for('home'))
+            return render_template("homepage.html", form=form, error=error)
         return render_template("homepage.html", form=form, error=error)
     return render_template("homepage.html", form=form, error=error)
 
@@ -109,6 +106,7 @@ def dashboard():
 
     error = None
     form = ListForm(request.form)
+    print(store.get_user_lists(session['id']))
     if request.method == 'POST':
         if form.validate_on_submit():
             get_id = session['id']
@@ -143,7 +141,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         form=form,
-        data=store.shoppinglists,
+        data=store.get_user_lists(session['id']),
         data_item=store.shoppinglistitems,
     )
 

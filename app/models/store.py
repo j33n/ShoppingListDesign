@@ -113,6 +113,14 @@ class Store(object):
             return False
         return "A session 'user' value is missing"
 
+    def get_user_lists(self, user_loggedin_id):
+        """ Get a user logged_in shopping lists """
+
+        for user_logged in range(len(self.users)):
+            if self.users[user_logged]['user_id'] == user_loggedin_id:
+                return self.users[user_logged]['shoppinglists']
+        return False
+
 
     def check_login(self, email, password):
         """Check if login credentials are matching with what we have"""
