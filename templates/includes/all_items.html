@@ -1,3 +1,11 @@
+<style>
+  .list_display .btn-group .btn-danger{
+    border-radius: 0 5px 5px 0;
+  }
+  .list_display .btn-group .btn{
+    padding: 2px 9px;
+  }
+</style>
 <div class="col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
   <div class="sl_item_title">          
   </div>
@@ -32,15 +40,14 @@
             </div>
 
             <div class="btn-group">
-              <button type="button" class="btn btn-default" data-toggle="modal" data-target=".bd-example-modal-sm" aria-label="Left Align">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-sm" aria-label="Left Align">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
               </button>
-              <button type="button" class="btn btn-default" aria-label="Center Align">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="btn btn-default" aria-label="Right Align">
-                <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
-              </button>
+              <a href="/delete_shoppinglistitem/{{my_item.item_id}}">
+                <button type="button" class="btn btn-danger" aria-label="Right Align">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+              </a>
             </div>
           </td>          
         </tr>
@@ -48,5 +55,5 @@
       </tbody>
     </table>
   </div>  
-  {% endif%}
+  {% endif %}
 </div>

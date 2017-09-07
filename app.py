@@ -244,7 +244,6 @@ def get_shoppinglist_item(list_id):
 		data=store.shoppinglists
 	)
 
-
 @app.route('/update-shoppinglistitem/<item_id>', methods=['GET', 'POST'])
 @login_required
 def update_shoppinglist_item(item_id):
@@ -295,6 +294,35 @@ def update_shoppinglist_item(item_id):
 		shoppinglistitems=store.shoppinglistitems
 	)
 
+@app.route('/delete_shoppinglistitem/<item_id>', methods=['GET', 'POST'])
+@login_required
+def delete_shoppinglist_item(item_id):
+	"""Allow a user to delete an item of his choice"""
+
+	serve_shoppinglistitem = store.get_item_data(item_id)
+	if store.delete_data('shoppinglistitem', item_id):
+		flash("Item list deleted succesfully")
+		return render_template(
+			"dashboard.html",
+			form=ItemForm(request.form),
+			shoppinglistdata=store.get_list_data(
+				serve_shoppinglistitem['shoppinglist_id']
+			),
+			to_load='all-items',
+			data=store.shoppinglists,
+			shoppinglistitems=store.shoppinglistitems
+		)
+	flash("Shopping list could not be found")
+	return render_template(
+		"dashboard.html",
+		form=ItemForm(request.form),
+		shoppinglistdata=store.get_list_data(
+			serve_shoppinglistitem['shoppinglist_id']
+		),
+		to_load='all-items',
+		data=store.shoppinglists,
+		shoppinglistitems=store.shoppinglistitems
+	)
 
 @app.route('/logout')
 @login_required

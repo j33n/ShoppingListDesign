@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-  <h3 style="color:#fff">
-    {% for message in get_flashed_messages() %}
-      {{ message }}
-    {% endfor %}
-  </h3>      
+<div class="row">     
   <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
   {% if to_load == 'new-item' %}
   {% include 'includes/add_item.html' %}

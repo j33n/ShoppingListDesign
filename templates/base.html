@@ -10,6 +10,18 @@
   <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
 </head>
 <body>
+  <style>
+    .sl_hero_content .flash_message{
+      background-color: #238f42;
+      font-size: 120%;
+      color: #fff;
+      font-family: cursive;
+      font-weight: 600;
+      border-radius: .6em;
+      margin: 0 25%;
+      box-shadow: 3px 1px 14px #ffffff;
+    }
+  </style>
   <section class="sl_hero">
     <nav class="navbar navbar-default sl_header">
       <div class="container-fluid">
@@ -61,13 +73,12 @@
     </nav>  
     <div class="container-fluid sl_hero_content">
       <!-- Child templates -->
-
-      {% block content %}{% endblock %}
-      <p class="bg-warning" width="250px" style="float: right; font-size: 20px; margin:5px; border-radius: 2px">  
+      <span class="flash_message">
         {% for message in get_flashed_messages() %}
-        {{ message }}
+        &nbsp&nbsp&nbsp{{ message }}&nbsp&nbsp&nbsp
         {% endfor %}
-      </p>
+      </span>
+      {% block content %}{% endblock %}
     </div>
   </section>
   <section class="sl_footer">
@@ -77,10 +88,9 @@
     </div>
   </section>
   <script
-src="{{url_for('static', filename='js/jquery.min.js')}}">
+  src="{{url_for('static', filename='js/jquery.min.js')}}">
 </script>
-<script
-src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
+<script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
 </script>
 </body>
 </html>

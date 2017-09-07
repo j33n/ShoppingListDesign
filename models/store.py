@@ -58,8 +58,12 @@ class Store(object):
                     return True
             return False
 
-        elif type_of_delete == "shoppingitem":
-            return "Delete item on shoppinglist"
+        elif type_of_delete == "shoppinglistitem":
+            for shoppinglistitem_n in range(len(self.shoppinglistitems)):
+                if self.shoppinglistitems[shoppinglistitem_n]['item_id'] == to_delete:
+                    del self.shoppinglistitems[shoppinglistitem_n]
+                    return True
+            return False
 
         else:
             return "We could not find what you are trying to delete"
