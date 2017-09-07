@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_text">
+    <h1>Keep track of your shopping</h1>
+    <a href="/login" class="btn btn-primary btn-large">
+      Login 
+      <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+    </a>          
+  </div>
+  <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 sl_hero_form">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong class="">Create a ShoppingList account</strong>
+      </div>
+      <div class="panel-body">
+        {% include 'forms/register_form.html' %}
+      </div>
+      <div class="panel-footer">Alredy have an account? <a href="/login" class="">Signin here</a>
+      </div>
+    </div>    
+  </div>
+</div>
+{% endblock %}

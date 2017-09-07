@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <h3 style="color:#fff">
+    {% for message in get_flashed_messages() %}
+      {{ message }}
+    {% endfor %}
+  </h3>
+  <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
+   <div class="row">
+  </div>
+  <div class="row new_list">
+   {% include 'forms/edit_list_form.html' %}
+  </div>
+  </div>
+   {% include 'includes/sidebar.html' %}
+</div>
+{% endblock %}

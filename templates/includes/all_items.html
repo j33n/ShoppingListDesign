@@ -1,0 +1,59 @@
+<style>
+  .list_display .btn-group .btn-danger{
+    border-radius: 0 5px 5px 0;
+  }
+  .list_display .btn-group .btn{
+    padding: 2px 9px;
+  }
+</style>
+<div class="col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
+  <div class="sl_item_title">          
+  </div>
+  {% if shoppinglistitems == []%}
+  <h4>No item yet</h4>
+  {%else%}  
+  <div class="panel panel-default" style="margin-top: 1em">
+    <div class="panel-heading">{{shoppinglistdata.title}}</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Description</th>
+          <th>Created On</th>
+          <th>Action</th> 
+        </tr>
+      </thead>
+      <tbody>
+        {% for my_item in shoppinglistitems %}
+        <tr>          
+          <th scope="row">{{my_item.item_title}}</th>          
+          <td>{{my_item.item_description}}</td>
+          <td>{{my_item.created_on}}</td>
+          <td>
+
+            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" style="margin-top: 10em;">
+                <div class="modal-content" style=" padding: 2em">
+                  {% include 'forms/edit_item_form.html' %}
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-sm" aria-label="Left Align">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </button>
+              <a href="/delete_shoppinglistitem/{{my_item.item_id}}">
+                <button type="button" class="btn btn-danger" aria-label="Right Align">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+              </a>
+            </div>
+          </td>          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>  
+  {% endif %}
+</div>

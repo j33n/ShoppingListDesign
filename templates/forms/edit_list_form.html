@@ -1,0 +1,53 @@
+<style type="text/css">
+  form.form-horizontal.editlist .form-control{
+    width: 40%;
+    margin-bottom: .5em;
+  }
+  form.form-horizontal.editlist .last{
+    width: 40%;
+  }
+</style>
+<form class="form-horizontal editlist" role="form" action="" method="post">
+  {{ form.csrf_token }}
+  {% for key, value in form_data.items() %}
+  {% if key == 'title' %}  
+      {{ form.title(placeholder="Your list title ...", class="form-control", value=value) }}
+    {%endif%}
+  {% endfor %}
+  <span class="error">
+      {% if form.title.errors %}
+        {% for error in form.title.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+    </span>
+  {% for key, value in form_data.items() %}
+  {% if key == 'description' %}    
+  {% set f = form.description.process_data(value) %}  
+    {{ form.description(placeholder="description", class="form-control") }} 
+    {%endif%}
+  {% endfor %}
+  <span class="warning">
+      {% if form.description.errors %}
+        {% for error in form.description.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+  </span>
+  {% for key, value in form_data.items() %}
+  {% if key == 'created_on' %}  
+      {{ form.hidden(placeholder="", class="form-control", value=value) }}
+    {%endif%}
+  {% endfor %}
+  {% if error %}
+    <p class="error" style="color:red">
+      <strong>Error: </strong>
+        {{ error }}
+    </p>
+  {% endif %}          
+  <div class="form-group last">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-success btn-sm">Update List</button>
+    </div>s
+  </div>                  
+</form>

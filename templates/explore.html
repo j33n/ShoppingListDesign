@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_text">
+    <h1>Share Your Lists by Accepting the Public Option</h1>        
+  </div>
+</div>
+{% endblock %}
+<p class="bg-danger" width="150px" style="float: right; font-size: 15px">  
+{% for message in get_flashed_messages() %}
+  {{ message }}
+{% endfor %}
+</p>
