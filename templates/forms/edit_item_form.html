@@ -1,0 +1,45 @@
+<style type="text/css">
+  form.form-horizontal.editlist .form-control{
+    margin-bottom: .5em;
+  }
+  form.form-horizontal.editlist .last .btn-sm{
+    border-radius: 17px;
+    padding: 5px 61px;
+    margin-left: 2em;
+  }
+</style>
+<h5><b>Edit shopping list item:</b></h5>
+<hr>
+<form class="form-horizontal editlist" role="form" action="/update-shoppinglistitem/{{my_item.item_id}}" method="post">
+  {{ form.csrf_token }} 
+      {{ form.item_title(placeholder="Your list title ...", class="form-control", value=my_item.item_title) }}
+    
+  <span class="error">
+      {% if form.item_title.errors %}
+        {% for error in form.item_title.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+    </span>
+  {% set f = form.item_description.process_data(my_item.item_description) %}  
+    {{ form.item_description(placeholder="description", class="form-control") }}
+  <span class="warning">
+      {% if form.item_description.errors %}
+        {% for error in form.item_description.errors %}
+          {{error}}
+        {% endfor %}
+      {% endif %}
+  </span>
+      {{ form.item_created_on(placeholder="", class="form-control", value=my_item.created_on) }}
+  {% if error %}
+    <p class="error" style="color:red">
+      <strong>Error: </strong>
+        {{ error }}
+    </p>
+  {% endif %}
+  <div class="form-group last">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-success btn-sm">Update Item</button>
+    </div>
+  </div>                
+</form>

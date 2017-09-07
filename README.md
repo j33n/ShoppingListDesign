@@ -10,23 +10,24 @@ ShoppingList
 ======================
 
 ShoppingList makes shopping quick, easy and fun allowing users to add, update, view or delete items in a shopping list and share the lists with the public.
-
-This is a basic html template, I will be using for my ShoppingList app
-Demo here: <a href="https://shoppinglistdesigns.herokuapp.com/">happyshoppinglist</a>
+![My homepage screen](Designs/screenshot.png?raw=true "My homepage screen")
+Here is a link to my ShoppingList app
+<a href="https://shoppinglistdesigns.herokuapp.com/">ShoppingList</a>
 
 ### Prerequisites
 
-I am using basic CSS, bootstrap and jQuery for the template and Flask to serve the pages only.
+I am using basic CSS, bootstrap and jQuery for the template and
+at the backend I am using Flask
 
 ### Installing
 
-To get up and running with it, basically just clone this repository, switch in that folder then setup flask and finally run the flask server.
+To get up and running with it, just clone this repository, switch in that folder then setup flask and finally run the flask server.
 Also set environment variables from repository settings
 
 ```
 git clone https://github.com/JeanAbayo/ShoppingListDesign.git
 cd ShoppingListDesign
-export APP_SETTINGS="config.TestingConfig"
+export APP_SETTINGS="config.DevelopmentConfig"
 virtuaelenv venv
 source dir/to/venv
 pip install -r requirements.txt
@@ -35,6 +36,7 @@ python app.py
 ```
 To run tests
 ```
+export APP_SETTINGS="config.TestingConfig"
 nosetests tests.py
 
 ```

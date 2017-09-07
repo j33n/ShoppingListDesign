@@ -6,3 +6,8 @@
   </div>
 </div>
 {% endblock %}
+<p class="bg-danger" width="150px" style="float: right; font-size: 15px">  
+{% for message in get_flashed_messages() %}
+  {{ message }}
+{% endfor %}
+</p>

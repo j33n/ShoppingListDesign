@@ -112,8 +112,7 @@ section.sl_hero .sl_hero_content a.btn:hover{
 	font-size: 150%;
 }
 .sl_hero .sl_hero_control h1>span:hover{
-	color: rgba(205,99,0, .9);	
-	font-size: 200%;
+	color: rgba(205,99,0, .9);
 }
 .sl_hero .sl_hero_display{
 	background-color: rgba(255,255,255, .95);

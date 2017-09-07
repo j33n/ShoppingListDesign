@@ -1,61 +1,124 @@
 """ Our Storage will be stored here """
 from flask import session
+from werkzeug.security import check_password_hash
 
 class Store(object):
     """ Storage module """
-    def __init__(self):
-        self.users = []
-        self.shoppinglists = []
-        self.items = []
+    users = []
+    shoppinglists = []
+    shoppinglistitems = []
 
 
     def store_data(self, data):
-        """Adding users, lists and items"""
-        if 'title' in data:
+        """Adding users, shopping lists and items"""
+
+        if "title" in data: 
+            if self.check_exists(data['title'], 'title'):
+                return False
             self.shoppinglists.append(data)
-            return self.shoppinglists[0]
-        elif 'email' in data:
-            self.users.append(data)
-            return self.users[0]
-
-    def edit_lists(self, list_id):
-        for list_n in range(1, len(self.shoppinglists)):
-            if self.shoppinglists[list_n]['list_id'] is not list_id:
-                return True
-            else:
-                return False
-
-    def check_list(self, list_to_check):
-        """Check if the list is already created"""
-
-        for list_n in range(0, len(self.shoppinglists)):
-            return bool(list_to_check in self.shoppinglists[list_n].keys())
-
-    def email_exists(self, email):
-        """Check if the user is already registered"""
-
-        for sess_n in range(0, len(session['storage'])):
-            if (session['storage'][sess_n]['email'] == email):
-                return True
-            else:
-                return False
-        
-
-    def store_session(self, data_to_store):
-        """ Store user session and check there is no othe email to conflict"""
-
-        if session.get('storage') is None:
-            session['storage'] = []
-            session['storage'].append(data_to_store)
             return True
-        else:
-            if(self.email_exists(data_to_store['email'])):
+        elif 'email' in data:
+            if self.check_exists(data['email'], 'email'):
                 return False
-            else:
-                session['storage'].append(data_to_store)
+            self.users.append(data)
+            return self.users
+
+        elif 'item_title' in data:
+            if self.check_exists(data['item_title'], 'item_title'):
+                return False
+            self.shoppinglistitems.append(data)
+            return self.shoppinglistitems
+
+    def update_data(self, data_to_update):
+        """Allow user to update his shoppinglists"""
+
+        if 'title' in data_to_update:
+            # if self.check_exists(data_to_update['title'], 'title'):
+            shoppinglist_data = self.get_list_data(data_to_update['list_id'])
+            shoppinglist_data['title'] = data_to_update['title']
+            shoppinglist_data['description'] = data_to_update['description']
+            return shoppinglist_data
+        shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
+        shoppinglistitem_data['item_title'] = data_to_update['item_title']
+        shoppinglistitem_data['item_description'] = data_to_update['item_description']
+        return shoppinglistitem_data
+
+    def delete_data(self, type_of_delete, to_delete):
+        """Allow a user to delete shopping lists and items"""
+
+        if type_of_delete == "shoppinglist":
+            for slist_n in range(len(self.shoppinglists)):
+                if self.shoppinglists[slist_n]['list_id'] == to_delete:
+                    del self.shoppinglists[slist_n]
+                    return True
+            return False
+
+        elif type_of_delete == "shoppinglistitem":
+            for shoppinglistitem_n in range(len(self.shoppinglistitems)):
+                if self.shoppinglistitems[shoppinglistitem_n]['item_id'] == to_delete:
+                    del self.shoppinglistitems[shoppinglistitem_n]
+                    return True
+            return False
+        return "We could not find what you are trying to delete"
+
+
+    def check_exists(self, check_in, check_for):
+        """Check if user, shopping list or item already exist in storage"""
+
+        if check_for == 'email':
+            search = self.users
+        elif check_for == 'title':
+            search = self.shoppinglists
+        elif check_for == 'item_title':
+            search = self.shoppinglistitems
+        else:
+            return "Invalid search"
+        for sess_n in range(len(search)):
+            if search[sess_n][check_for] == check_in:
                 return True
-            
-    def newlist_session(self, list_to_store):
-        session['storage'][len(session['storage'])-1]['shoppinglists'].append(list_to_store)
-        return True
-        	
+        return False
+
+    def get_list_data(self, list_id):
+        """Getting the data for a certain shopping list"""
+
+        for list_n in range(len(self.shoppinglists)):
+            l_data = list_id in self.shoppinglists[list_n].values()
+            if l_data is True:
+                return self.shoppinglists[list_n]
+
+    def get_item_data(self, item_id):
+        """Getting the data for a certain shopping item in a shopping list"""
+
+        for item_n in range(len(self.shoppinglistitems)):
+            item_data = item_id in self.shoppinglistitems[item_n].values()
+            if item_data is True:
+                return self.shoppinglistitems[item_n]
+        return False
+
+    def user_logged_in_index(self):
+        """Get a key index for a logged in user"""
+
+        for user_n in range(len(self.users)):
+            if self.users[user_n]['email'] == session['user']:
+                return user_n
+        return False
+
+    def get_user_uuid(self):
+        """ Get a user uuid to be used as a foreign key """
+
+        if 'user' in session:
+            for user_n in range(len(self.users)):
+                if self.users[user_n]['email'] == session['user']:
+                    return self.users[user_n]['user_id']
+            return False
+        return "A session 'user' value is missing"
+
+
+    def check_login(self, email, password):
+        """Check if login credentials are matching with what we have"""
+
+        for log_n in range(len(self.users)):
+            if email == self.users[log_n]['email'] and check_password_hash(
+                        self.users[log_n]['password'], password) is True:
+                return True
+        return False

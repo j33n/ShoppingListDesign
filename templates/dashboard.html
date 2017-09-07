@@ -1,122 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ShoppingList: Keep track of your shopping</title>
-  <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}
-  " rel="stylesheet">
-  <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
-</head>
-<body style="overflow: hidden;">
-  <section class="sl_hero" style="
-  min-height: 100vh;">
-  <nav class="navbar navbar-default navbar-fixed-top sl_header">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#"><img src="../static/images/sl_logo.png" alt="Shopping List Logo"></a>
-      </div>
-      <div class="collapse navbar-collapse sl_collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">          
-          <li>
-            <a href="/explore">
-              <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-              Explore
-            </a>
-          </li>          
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a href="/logout">
-              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-              Logout
-            </a>
-          </li>          
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div class="container-fluid sl_hero_content" style="margin-top:130px">
-    <div class="row">
-      <h3 style="color:#fff">
-        {% for message in get_flashed_messages() %}
-        {{ message }}
-        {% endfor %}
-      </h3>      
-      <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
-       <div class="row">
-        <h1>
-          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-          Add a new List
-        </h1>
-      </div>
-      <div class="row new_list">
-       {% include 'forms/new_list_form.html' %}
-     </div>
-   </div>
-   <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 sl_hero_display list_display">
-    <div class="sl_item_title">
-      <h2>All Lists</h2>          
-    </div>
-    <div class="row sl_item_row">            
-      {% for dict_item in data %}
-      {% for key, value in dict_item.items() %}
-      <div class="panel panel-success">                    
-        {% if key == "title" %}
-        <div class="panel-heading">
-          <h3 class="panel-title">{{value}}</h3>
-        </div>
-        {% elif key == "description" %}
-        <div class="panel-body"> {{value}} </div>
-        {% elif key == "created_on" %}
-        <div class="panel-footer">{{value}}
-          {% elif key == "list_id" %}
-          <div class="btn-group btn-group-justified" style="margin-top:10px" role="group" aria-label="...">
-            <a href="/edit-list/{{value}}">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-success">Edit</button>
-              </div>
-            </a>
-            <a href="/add-item/{{value}}">                                  
-              <div classs="btn-group" role="group">              
-                <button type="button" class="btn btn-warning">Add Items</button>
-              </div>
-            </a>
-            <a href="/delete-list/{{value}}">        
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-danger">Delete</button>
-              </div>
-            </a>          
-          </div>
-        </div>
-        {% endif %}                                     
-      </div>
-      {% endfor %}
-      {% endfor %}
-    </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="row">     
+  <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 sl_hero_control">
+  {% if to_load == 'new-item' %}
+  {% include 'includes/add_item.html' %}
+  {% elif to_load == 'add-item' %}
+  {% include 'forms/new_item_form.html' %}
+  {% elif to_load == 'all-items' %}
+  {% include 'includes/all_items.html' %}
+  {% else %}
+    {% include 'forms/new_list_form.html' %}
+  {% endif %}
   </div>
+   {% include 'includes/sidebar.html' %}
 </div>
-</div>
-</section>
-<section class="sl_footer">
-  <div class="container-fluid">
-    <div class="col-sm-9">&copy 2017 ShoppingList</div>
-    <div class="col-sm-3">Made with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> by <a href="https://jeanabayo.github.io">Jean Abayo</a></div>
-  </div>
-</section>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"
-integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-crossorigin="anonymous">    
-</script>
-<script
-src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
-</script>
-</body>
-</html>
+{% endblock %}
