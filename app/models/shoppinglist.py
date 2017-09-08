@@ -12,7 +12,6 @@ class ShoppingList(object):
         self.list_title = title
         self.list_description = description
         self.created_on = created_on
-        self.public = False
         self.items = []
 
     def list_data(self):

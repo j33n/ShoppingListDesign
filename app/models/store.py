@@ -1,4 +1,4 @@
-""" Our Storage will be stored here """
+""" Our Data will be stored here """
 from flask import session
 from werkzeug.security import check_password_hash
 
@@ -24,7 +24,7 @@ class Store(object):
             return self.users
 
         elif 'item_title' in data:
-            if self.check_exists(data['item_title'], 'item_title'):
+            if self.check_exists(data, 'item_title'):
                 return False
             self.shoppinglistitems.append(data)
             return self.shoppinglistitems
@@ -33,7 +33,6 @@ class Store(object):
         """Allow user to update his shoppinglists"""
 
         if 'title' in data_to_update:
-            # if self.check_exists(data_to_update['title'], 'title'):
             shoppinglist_data = self.get_list_data(data_to_update['list_id'])
             shoppinglist_data['title'] = data_to_update['title']
             shoppinglist_data['description'] = data_to_update['description']
@@ -68,9 +67,13 @@ class Store(object):
         if check_for == 'email':
             search = self.users
         elif check_for == 'title':
-            search = self.shoppinglists
+            search = self.get_user_lists()
         elif check_for == 'item_title':
-            search = self.shoppinglistitems
+            search = self.get_shoppinglists_items(check_in['shoppinglist_id'])
+            for sess_n in range(len(search)):
+                if search[sess_n][check_for] == check_in['item_title']:
+                    return True
+            return False
         else:
             return "Invalid search"
         for sess_n in range(len(search)):
@@ -115,18 +118,18 @@ class Store(object):
 
     def get_user_lists(self):
         """ Get a user logged_in shopping lists """
+
         shopping_list_to_render = []
         for user_logged in range(len(self.shoppinglists)):
             if self.shoppinglists[user_logged]['owner_id'] == session['id']:
                 shopping_list_to_render.append(self.shoppinglists[user_logged])
         return shopping_list_to_render
 
+    def get_shoppinglists_items(self, shoppinglist_id):
+        """Get a selected shopping list items"""
 
-    def check_login(self, email, password):
-        """Check if login credentials are matching with what we have"""
-
-        for log_n in range(len(self.users)):
-            if email == self.users[log_n]['email'] and check_password_hash(
-                        self.users[log_n]['password'], password) is True:
-                return True
-        return False
+        shopping_list_item_to_render = []
+        for list_logged in range(len(self.shoppinglistitems)):
+            if self.shoppinglistitems[list_logged]['shoppinglist_id'] == shoppinglist_id:
+                shopping_list_item_to_render.append(self.shoppinglistitems[list_logged])
+        return shopping_list_item_to_render

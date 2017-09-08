@@ -95,13 +95,6 @@ def login():
     return render_template("login.html", form=form, error=error)
 
 
-@app.route('/explore')
-def explore():
-    """Render the explore page and Ensure users can see shared lists"""
-
-    return render_template("explore.html")
-
-
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
@@ -109,8 +102,6 @@ def dashboard():
 
     error = None
     form = ListForm(request.form)
-    print(session['id'])
-    print(store.get_user_lists())
     if request.method == 'POST':
         if form.validate_on_submit():
             get_id = session['id']
@@ -126,19 +117,19 @@ def dashboard():
                     "dashboard.html",
                     form=form,
                     data_item=store.shoppinglistitems,
-                    data=store.shoppinglists
+                    data=store.get_user_lists()
                 )
             flash("List already exists")
             return render_template(
                 "dashboard.html",
                 form=form,
-                data=store.shoppinglists,
+                data=store.get_user_lists(),
                 data_item=store.shoppinglistitems
             )
         return render_template(
             "dashboard.html",
             form=form,
-            data=store.shoppinglists,
+            data=store.get_user_lists(),
             data_item=store.shoppinglistitems,
             error=error
         )
@@ -173,7 +164,7 @@ def edit_list(list_id):
     return render_template(
         "includes/edit_list.html",
         form=form,
-        data=store.shoppinglists,
+        data=store.get_user_lists(),
         data_item=store.shoppinglistitems,
         form_data=serve_temp
     )
@@ -221,14 +212,14 @@ def add_shopping_item(list_id):
             error=error,
             shoppinglistdata=serve_shoppinglist,
             to_load='add-item',
-            data=store.shoppinglists
+            data=store.get_user_lists()
         )
     return render_template(
         "dashboard.html",
         form=form,
         shoppinglistdata=serve_shoppinglist,
         to_load='add-item',
-        data=store.shoppinglists
+        data=store.get_user_lists()
     )
 
 
@@ -243,8 +234,8 @@ def get_shoppinglist_item(list_id):
         form=ItemForm(request.form),
         shoppinglistdata=serve_shoppinglist,
         to_load='all-items',
-        shoppinglistitems=store.shoppinglistitems,
-        data=store.shoppinglists
+        shoppinglistitems=store.get_shoppinglists_items(list_id),
+        data=store.get_user_lists()
     )
 
 
@@ -273,8 +264,10 @@ def update_shoppinglist_item(item_id):
                     serve_shoppinglistitem['shoppinglist_id']
                 ),
                 to_load='all-items',
-                data=store.shoppinglists,
-                shoppinglistitems=store.shoppinglistitems
+                data=store.get_user_lists(),
+                shoppinglistitems=store.get_shoppinglists_items(
+                    serve_shoppinglistitem['shoppinglist_id']
+                    )
             )
         flash("Invalid data to update Item")
         return render_template(
@@ -284,8 +277,10 @@ def update_shoppinglist_item(item_id):
                 serve_shoppinglistitem['shoppinglist_id']
             ),
             to_load='all-items',
-            data=store.shoppinglists,
-            shoppinglistitems=store.shoppinglistitems
+            data=store.get_user_lists(),
+            shoppinglistitems=store.get_shoppinglists_items(
+                    serve_shoppinglistitem['shoppinglist_id']
+                    )
         )
     return render_template(
         "dashboard.html",
@@ -294,8 +289,10 @@ def update_shoppinglist_item(item_id):
             serve_shoppinglistitem['shoppinglist_id']
         ),
         to_load='all-items',
-        data=store.shoppinglists,
-        shoppinglistitems=store.shoppinglistitems
+        data=store.get_user_lists(),
+        shoppinglistitems=store.get_shoppinglists_items(
+                    serve_shoppinglistitem['shoppinglist_id']
+                    )
     )
 
 
@@ -314,8 +311,10 @@ def delete_shoppinglist_item(item_id):
                 serve_shoppinglistitem['shoppinglist_id']
             ),
             to_load='all-items',
-            data=store.shoppinglists,
-            shoppinglistitems=store.shoppinglistitems
+            data=store.get_user_lists(),
+            shoppinglistitems=store.get_shoppinglists_items(
+                serve_shoppinglistitem['shoppinglist_id']
+            )
         )
     flash("Shopping list could not be found")
     return render_template(
@@ -325,8 +324,10 @@ def delete_shoppinglist_item(item_id):
             serve_shoppinglistitem['shoppinglist_id']
         ),
         to_load='all-items',
-        data=store.shoppinglists,
-        shoppinglistitems=store.shoppinglistitems
+        data=store.get_user_lists(),
+        shoppinglistitems=store.get_shoppinglists_items(
+            serve_shoppinglistitem['shoppinglist_id']
+        )
     )
 
 
