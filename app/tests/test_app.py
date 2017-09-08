@@ -101,7 +101,7 @@ class FlaskTestCase(unittest.TestCase):
 
 	def test_wrong_data(self):
 		"""Test if our signup form is valid"""
-		
+
 		response1 = self.accounts('uwouwo', 'uwouwo.test.com', 'secret', 'secret')
 		self.assertIn(b'Invalid email address', response1.data)
 		response2 = self.accounts('Puerto', 'uwouwo@test.com', 'pokito', 'pokito1')
@@ -148,21 +148,35 @@ class FlaskTestCase(unittest.TestCase):
 		self.assertIsInstance(shoppinglist.list_data(), dict)
 		self.assertEqual(shoppinglist.list_data()['title'], 'Tech stuff')
 
-
-	def test_check_login(self):
-		self.accounts = ('burito', 'burito@test.com', 'secret', 'secret')
-		login_check = Store().check_login('burito@test.com', 'secret')
-		self.assertTrue(login_check)
-
 	def test_user_logout(self):
 		"""Test user can logout"""
 
-		self.accounts('Despacito', 'despacito@test.com', 'secret', 'secret')
+		self.accounts('Despacito', 'despacitod@test.com', 'secret', 'secret')
 		response = self.client.get(
 			'/logout',
 			follow_redirects=True
 		)
 		self.assertTrue(b'We hope you enjoyed organizing and sharing lists see you soon' in response.data)
+
+
+	def test_user_added_to_store(self):
+		"""Test users is added to our store"""
+		users_size = len(Store().users)
+		response = self.accounts('Despacito', 'despacito@test.com', 'secret', 'secret')
+		self.assertTrue(b"Welcome Despasito",response.data)
+		users_updated = len(Store().users)
+		self.assertIsInstance(Store().users, list)
+		self.assertEqual(users_updated - users_size, 1)
+
+	def test_shoppinglists_added_to_store(self):
+		"""Test shoppinglist is added to our store"""
+		self.accounts('Despacito', 'despacitoa@test.com', 'secret', 'secret')
+		shoppinglists_size = len(Store().shoppinglists)
+		response = self.shoppinglists('My other list', 'Buy a dog')
+		shoppinglists_updated = len(Store().shoppinglists)
+		self.assertIsInstance(Store().shoppinglists, list)
+		self.assertEqual(shoppinglists_updated - shoppinglists_size, 1)
+		
 
 if __name__ == '__main__':
 	unittest.main()

@@ -44,3 +44,8 @@ nosetests tests.py
 ## Authors
 
 * **Jean Abayo** - *Initial work* - [JeanAbayo](https://github.com/JeanAbayo)
+
+## Credits
+
+* **Daisy Ndungu** - [DaisyNdungu](https://github.com/daisyndungu)
+* **Humphrey Musonye** 

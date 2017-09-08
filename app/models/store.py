@@ -1,4 +1,4 @@
-""" Our Data will be stored here """
+""" Our Storage will be stored here """
 from flask import session
 from werkzeug.security import check_password_hash
 
@@ -133,3 +133,12 @@ class Store(object):
             if self.shoppinglistitems[list_logged]['shoppinglist_id'] == shoppinglist_id:
                 shopping_list_item_to_render.append(self.shoppinglistitems[list_logged])
         return shopping_list_item_to_render
+
+    def check_login(self, email, password):
+        """Check if login credentials are matching with what we have"""
+
+        for log_n in range(len(self.users)):
+            if email == self.users[log_n]['email'] and check_password_hash(
+                        self.users[log_n]['password'], password) is True:
+                return True
+        return False
