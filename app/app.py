@@ -157,8 +157,10 @@ def edit_list(list_id):
                 list_id=list_id,
                 created_on=request.form['hidden']
             )
-            renew_list.update_list()
-            flash('List updated successfuly')
+            if renew_list.update_list() is True:
+                flash('Shopping list updated successfuly')
+                return redirect(url_for('dashboard'))
+            flash(renew_list.update_list())
             return redirect(url_for('dashboard'))
 
     return render_template(

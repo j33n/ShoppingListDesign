@@ -33,10 +33,12 @@ class Store(object):
         """Allow user to update his shoppinglists"""
 
         if 'title' in data_to_update:
-            shoppinglist_data = self.get_list_data(data_to_update['list_id'])
-            shoppinglist_data['title'] = data_to_update['title']
-            shoppinglist_data['description'] = data_to_update['description']
-            return shoppinglist_data
+            if not self.check_exists(data_to_update['title'], 'title'):
+                shoppinglist_data = self.get_list_data(data_to_update['list_id'])
+                shoppinglist_data['title'] = data_to_update['title']
+                shoppinglist_data['description'] = data_to_update['description']
+                return True
+            return "Shopping list title already exists"
         shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
         shoppinglistitem_data['item_title'] = data_to_update['item_title']
         shoppinglistitem_data['item_description'] = data_to_update['item_description']
