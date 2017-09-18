@@ -9,9 +9,7 @@ class FlaskClientTestCase(unittest.TestCase):
 
     def setUp(self):
         """Prepare the data to use through tests"""
-        # self.app = create_app()
-        # self.app_context = app.app_context()
-        # self.app_context.push()
+        
         self.client = app.test_client(use_cookies=True)
 
         self.shoppinglist = Store.shoppinglists
@@ -40,7 +38,10 @@ class FlaskClientTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Clear all data set up"""
-        # self.app_context.pop()
+
+        self.shoppinglist = None
+        self.user = None
+        self.items = None
 
     def test_all_storage(self):
         """Test we have our storage ready"""
