@@ -4,7 +4,7 @@ import os
 
 from functools import wraps
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask import Flask, current_app, render_template, redirect, url_for, request, session, flash
 from app.models.user import User
 from app.models.store import Store
 from app.models.shoppinglist import ShoppingList
@@ -13,6 +13,9 @@ from werkzeug.security import generate_password_hash
 from app.forms import RegisterForm, LoginForm, ListForm, EditList, ItemForm
 
 app = Flask(__name__)
+with app.app_context():
+    # within this block, current_app points to app.
+    print(current_app.name)
 
 
 app.config.from_object(os.environ['APP_SETTINGS'])
