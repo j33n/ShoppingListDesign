@@ -64,7 +64,7 @@ def home():
                     return redirect(url_for('dashboard'))
                 flash("User already exists")
                 return render_template("homepage.html", form=form, error=error)
-            flash("Another account already in service")
+            flash("Another account is already in service")
             return render_template("homepage.html", form=form, error=error)
         return render_template("homepage.html", form=form, error=error)
     return render_template("homepage.html", form=form, error=error)

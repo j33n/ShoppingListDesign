@@ -28,10 +28,10 @@ Also set environment variables from repository settings
 git clone https://github.com/JeanAbayo/ShoppingListDesign.git
 cd ShoppingListDesign
 export APP_SETTINGS="config.DevelopmentConfig"
-virtuaelenv venv
-source dir/to/venv
+virtualenv venv
+source dir/to/venv/bin/activate
 pip install -r requirements.txt
-python app.py
+python manage.py
 
 ```
 To run tests
