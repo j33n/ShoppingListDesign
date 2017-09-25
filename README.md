@@ -37,7 +37,7 @@ python manage.py
 To run tests
 ```
 export APP_SETTINGS="config.TestingConfig"
-nosetests tests.py
+nosetests app/tests/*
 
 ```
 
