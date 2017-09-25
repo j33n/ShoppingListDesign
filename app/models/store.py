@@ -33,16 +33,25 @@ class Store(object):
         """Allow user to update his shoppinglists"""
 
         if 'title' in data_to_update:
-            if not self.check_exists(data_to_update['title'], 'title'):
-                shoppinglist_data = self.get_list_data(data_to_update['list_id'])
-                shoppinglist_data['title'] = data_to_update['title']
-                shoppinglist_data['description'] = data_to_update['description']
-                return True
-            return "Shopping list title already exists"
+            shoppinglist_data = self.get_list_data(data_to_update['list_id'])
+            if self.check_exists(data_to_update['title'], 'title'):
+                if shoppinglist_data['description'] != data_to_update['description']:
+                    shoppinglist_data['description'] = data_to_update['description']
+                    return True
+                return "Shopping list title already exists"    
+            shoppinglist_data['title'] = data_to_update['title']
+            shoppinglist_data['description'] = data_to_update['description']
+            return True
+            
         shoppinglistitem_data = self.get_item_data(data_to_update['item_id'])
+        if self.check_exists(data_to_update, 'item_title'):
+            if shoppinglistitem_data['item_description'] != data_to_update['item_description']:
+                shoppinglistitem_data['item_description'] = data_to_update['item_description']
+                return True
+            return False    
         shoppinglistitem_data['item_title'] = data_to_update['item_title']
         shoppinglistitem_data['item_description'] = data_to_update['item_description']
-        return shoppinglistitem_data
+        return True
 
     def delete_data(self, type_of_delete, to_delete):
         """Allow a user to delete shopping lists and items"""

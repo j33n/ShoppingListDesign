@@ -15,7 +15,7 @@ from app.forms import RegisterForm, LoginForm, ListForm, EditList, ItemForm
 app = Flask(__name__)
 with app.app_context():
     # within this block, current_app points to app.
-    print(current_app.name)
+    current_app.name
 
 
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -260,8 +260,21 @@ def update_shoppinglist_item(item_id):
                 item_id=item_id,
                 created_on=request.form['item_created_on']
             )
-            renew_shoppinglistitem.update_shoppinglist_item()
-            flash('Item on list updated successfuly')
+            if renew_shoppinglistitem.update_shoppinglist_item():
+                flash('Item on list updated successfuly')
+                return render_template(
+                    "dashboard.html",
+                    form=form,
+                    shoppinglistdata=store.get_list_data(
+                        serve_shoppinglistitem['shoppinglist_id']
+                    ),
+                    to_load='all-items',
+                    data=store.get_user_lists(),
+                    shoppinglistitems=store.get_shoppinglists_items(
+                        serve_shoppinglistitem['shoppinglist_id']
+                        )
+                )
+            flash('Shopping List Item already exists')
             return render_template(
                 "dashboard.html",
                 form=form,
