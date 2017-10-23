@@ -124,7 +124,7 @@ class FlaskTestCase(unittest.TestCase):
         response2 = self.accounts(
             'Favorito', 'favorito@test.com', 'secret', 'secret')
         self.assertIn(b'Welcome Favorito', response1.data)
-        self.assertIn(b'Another account already in service', response2.data)
+        self.assertIn(b'Another account is already in service', response2.data)
 
     def test_user_login(self):
         """Ensure user can login"""
